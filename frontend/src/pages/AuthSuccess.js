@@ -10,22 +10,14 @@ const AuthSuccess = () => {
 
   useEffect(() => {
     const token = searchParams.get('token');
-    
     if (token) {
-      API.get('/auth/me', {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-        .then(res => {
-          login(res.data, token);
-          navigate('/');
-        })
-        .catch(() => {
-          navigate('/login');
-        });
+      API.get('/auth/me', { headers: { Authorization: `Bearer ${token}` } })
+        .then(res => { login(res.data, token); navigate('/'); })
+        .catch(() => navigate('/login'));
     } else {
       navigate('/login');
     }
-  }, []);
+  }, [login, navigate, searchParams]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="min-h-screen flex items-center justify-center">

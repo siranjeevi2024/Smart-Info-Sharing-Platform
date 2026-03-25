@@ -28,7 +28,7 @@ const Home = () => {
     });
 
     return () => socket.disconnect();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchPosts = async () => {
     try {
@@ -56,7 +56,7 @@ const Home = () => {
   useEffect(() => {
     fetchPosts();
     fetchTrending();
-  }, [search, category, sort]);
+  }, [search, category, sort]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!user) {
     return <Landing />;

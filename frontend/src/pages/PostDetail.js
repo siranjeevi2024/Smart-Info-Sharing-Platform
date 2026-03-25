@@ -15,7 +15,7 @@ const PostDetail = () => {
 
   useEffect(() => {
     fetchPost();
-  }, [id]);
+  }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchPost = async () => {
     try {

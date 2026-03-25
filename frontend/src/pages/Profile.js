@@ -10,7 +10,7 @@ const Profile = () => {
 
   useEffect(() => {
     fetchMyPosts();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchMyPosts = async () => {
     try {

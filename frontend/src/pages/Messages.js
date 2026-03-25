@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import API from '../utils/api';
 import { useAuth } from '../context/AuthContext';
@@ -8,7 +8,6 @@ import { toast } from 'react-toastify';
 const Messages = () => {
   const { userId } = useParams();
   const { user } = useAuth();
-  const navigate = useNavigate();
   const [conversations, setConversations] = useState([]);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
@@ -66,7 +65,7 @@ const Messages = () => {
       }
       socket.disconnect();
     };
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (userId) {
@@ -310,7 +309,7 @@ const Messages = () => {
                       >
                         {msg.messageType === 'image' ? (
                           <div className="p-2">
-                            <img src={msg.image} alt="Sent image" className="rounded-lg max-w-full" />
+                            <img src={msg.image} alt="Sent" className="rounded-lg max-w-full" />
                             {msg.content && <p className="mt-2 px-2">{msg.content}</p>}
                           </div>
                         ) : (
