@@ -12,9 +12,59 @@ const allowedOrigins = (process.env.FRONTEND_URL || 'http://localhost:3000')
   .map((origin) => origin.trim())
   .filter(Boolean);
 
+const parseOrigin = (value) => {
+  try {
+    return new URL(value);
+  } catch (error) {
+    return null;
+  }
+};
+
+const matchesAllowedOrigin = (origin) => {
+  if (!origin) {
+    return true;
+  }
+
+  if (allowedOrigins.includes(origin)) {
+    return true;
+  }
+
+  const requestUrl = parseOrigin(origin);
+  if (!requestUrl) {
+    return false;
+  }
+
+  return allowedOrigins.some((allowedOrigin) => {
+    const allowedUrl = parseOrigin(allowedOrigin);
+    if (!allowedUrl) {
+      return false;
+    }
+
+    if (allowedUrl.origin === requestUrl.origin) {
+      return true;
+    }
+
+    // Allow Vercel preview deployments for the same project slug.
+    if (
+      allowedUrl.protocol === 'https:' &&
+      requestUrl.protocol === 'https:' &&
+      allowedUrl.hostname.endsWith('.vercel.app') &&
+      requestUrl.hostname.endsWith('.vercel.app')
+    ) {
+      const allowedProject = allowedUrl.hostname.replace(/\.vercel\.app$/, '');
+      return (
+        requestUrl.hostname === allowedUrl.hostname ||
+        requestUrl.hostname.startsWith(`${allowedProject}-`)
+      );
+    }
+
+    return false;
+  });
+};
+
 const corsOptions = {
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (matchesAllowedOrigin(origin)) {
       return callback(null, true);
     }
 
