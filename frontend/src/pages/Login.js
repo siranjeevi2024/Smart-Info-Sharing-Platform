@@ -5,11 +5,6 @@ import API from '../utils/api';
 import { toast } from 'react-toastify';
 import { API_BASE_URL } from '../utils/config';
 
-const DEMO_CREDENTIALS = {
-  email: 'demo.user@example.com',
-  password: 'DemoUser@123'
-};
-
 const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
@@ -42,22 +37,6 @@ const Login = () => {
     <div className="min-h-screen bg-gray-100 flex items-center justify-center py-12 px-4">
       <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
         <h2 className="text-3xl font-bold text-center mb-6">Welcome Back</h2>
-
-        <div className="mb-6 rounded-lg border border-blue-200 bg-blue-50 p-4 text-sm text-blue-900">
-          <p className="font-semibold">Demo account</p>
-          <p>Email: {DEMO_CREDENTIALS.email}</p>
-          <p>Password: {DEMO_CREDENTIALS.password}</p>
-          <button
-            type="button"
-            onClick={() => {
-              setFormData(DEMO_CREDENTIALS);
-              setErrorMessage('');
-            }}
-            className="mt-3 text-blue-700 font-medium hover:underline"
-          >
-            Use demo account
-          </button>
-        </div>
 
         {errorMessage && (
           <div className="mb-4 rounded-lg bg-red-100 px-4 py-3 text-sm text-red-700">
