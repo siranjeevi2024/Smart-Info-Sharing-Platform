@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import API from '../utils/api';
 
 export default function ResetPassword() {
   const [password, setPassword] = useState('');
@@ -17,7 +17,7 @@ export default function ResetPassword() {
       return;
     }
     try {
-      const { data } = await axios.post(`http://localhost:5002/api/auth/reset-password/${token}`, { password });
+      const { data } = await API.post(`/auth/reset-password/${token}`, { password });
       setMessage(data.message);
       setError('');
       setTimeout(() => navigate('/login'), 2000);

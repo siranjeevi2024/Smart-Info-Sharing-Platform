@@ -4,6 +4,7 @@ import { io } from 'socket.io-client';
 import API from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-toastify';
+import { API_URL } from '../utils/config';
 
 const Messages = () => {
   const { userId } = useParams();
@@ -37,7 +38,7 @@ const Messages = () => {
     fetchConversations();
     fetchUsers();
 
-    const socket = io('http://localhost:5002');
+    const socket = io(API_URL);
     
     if (user) {
       socket.emit('userOnline', user._id);

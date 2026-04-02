@@ -6,6 +6,7 @@ import PostCard from '../components/PostCard';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/AuthContext';
 import Landing from './Landing';
+import { API_URL } from '../utils/config';
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
@@ -21,7 +22,7 @@ const Home = () => {
     fetchPosts();
     fetchTrending();
 
-    const socket = io('http://localhost:5002');
+    const socket = io(API_URL);
     socket.on('newPost', (newPost) => {
       setPosts(prev => [newPost, ...prev]);
       toast.info('New post added!');
