@@ -6,93 +6,100 @@ import { toast } from 'react-toastify';
 import { API_BASE_URL } from '../utils/config';
 
 const Login = () => {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  });
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const { data } = await API.post('/auth/login', formData);
       login(data, data.token);
       setErrorMessage('');
-      toast.success('Login successful!');
+      toast.success('Welcome back!');
       navigate('/');
     } catch (error) {
       const message = error.response?.data?.error || 'Login failed';
       setErrorMessage(message);
-      toast.error(message);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleGoogleLogin = () => {
-    window.location.href = `${API_BASE_URL}/auth/google`;
-  };
-
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center py-12 px-4">
-      <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
-        <h2 className="text-3xl font-bold text-center mb-6">Welcome Back</h2>
-
-        {errorMessage && (
-          <div className="mb-4 rounded-lg bg-red-100 px-4 py-3 text-sm text-red-700">
-            {errorMessage}
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center px-4 py-12">
+      <div className="w-full max-w-md animate-slide-up">
+        {/* Logo */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-14 h-14 bg-indigo-600 rounded-2xl mb-4 shadow-lg">
+            <span className="text-2xl font-black text-white">S</span>
           </div>
-        )}
-        
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium mb-2">Email</label>
-            <input
-              type="email"
-              required
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-              value={formData.email}
-              onChange={(e) => setFormData({...formData, email: e.target.value})}
-            />
-          </div>
+          <h1 className="text-3xl font-bold text-slate-800">Welcome back</h1>
+          <p className="text-slate-500 mt-1">Sign in to your account</p>
+        </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-2">Password</label>
-            <input
-              type="password"
-              required
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-              value={formData.password}
-              onChange={(e) => setFormData({...formData, password: e.target.value})}
-            />
-            <div className="text-right mt-1">
-              <Link to="/forgot-password" className="text-sm text-blue-600 hover:underline">
-                Forgot Password?
-              </Link>
+        <div className="card p-8">
+          {errorMessage && (
+            <div className="mb-5 flex items-center gap-2 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
+              <svg className="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+              </svg>
+              {errorMessage}
             </div>
-          </div>
+          )}
 
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700"
-          >
-            Login
-          </button>
-        </form>
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-1.5">Email address</label>
+              <input
+                type="email"
+                required
+                placeholder="you@example.com"
+                className="input-field"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              />
+            </div>
 
-        <div className="mt-4">
-          <div className="relative">
+            <div>
+              <div className="flex justify-between items-center mb-1.5">
+                <label className="block text-sm font-semibold text-slate-700">Password</label>
+                <Link to="/forgot-password" className="text-xs text-indigo-600 hover:text-indigo-700 font-medium">
+                  Forgot password?
+                </Link>
+              </div>
+              <input
+                type="password"
+                required
+                placeholder="••••••••"
+                className="input-field"
+                value={formData.password}
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              />
+            </div>
+
+            <button type="submit" disabled={loading} className="btn-primary w-full flex items-center justify-center gap-2">
+              {loading ? (
+                <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> Signing in...</>
+              ) : 'Sign in'}
+            </button>
+          </form>
+
+          <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300"></div>
+              <div className="w-full border-t border-slate-200" />
             </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">Or continue with</span>
+            <div className="relative flex justify-center">
+              <span className="px-3 bg-white text-xs text-slate-400 font-medium">OR CONTINUE WITH</span>
             </div>
           </div>
 
           <button
-            onClick={handleGoogleLogin}
-            className="mt-4 w-full flex items-center justify-center gap-2 bg-white border border-gray-300 text-gray-700 py-2 rounded-lg hover:bg-gray-50"
+            onClick={() => window.location.href = `${API_BASE_URL}/auth/google`}
+            className="btn-secondary w-full flex items-center justify-center gap-3"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -104,10 +111,10 @@ const Login = () => {
           </button>
         </div>
 
-        <p className="text-center mt-4 text-sm">
+        <p className="text-center mt-6 text-sm text-slate-500">
           Don't have an account?{' '}
-          <Link to="/register" className="text-blue-600 hover:underline">
-            Register here
+          <Link to="/register" className="text-indigo-600 font-semibold hover:text-indigo-700">
+            Create one free
           </Link>
         </p>
       </div>

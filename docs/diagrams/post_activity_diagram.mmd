@@ -1,0 +1,14 @@
+flowchart TD
+    A[Start] --> B[User logs in]
+    B --> C[Open Create Post Page]
+    C --> D[Enter title description category and tags]
+    D --> E{Valid input?}
+    E -- No --> F[Show validation error]
+    F --> D
+    E -- Yes --> G[Submit post]
+    G --> H[Backend stores post in MongoDB]
+    H --> I[Post appears in feed]
+    I --> J[Other users view post]
+    J --> K[Like comment or save]
+    K --> L[Update engagement data]
+    L --> M[End]

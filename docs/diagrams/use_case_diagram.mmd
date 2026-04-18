@@ -1,0 +1,39 @@
+flowchart LR
+    U[User]
+    A[Admin]
+    S((Smart Info Sharing Platform))
+
+    U --> UC1[Register Account]
+    U --> UC2[Login]
+    U --> UC3[Login with Google]
+    U --> UC4[Reset Password]
+    U --> UC5[Create Post]
+    U --> UC6[Edit or Delete Own Post]
+    U --> UC7[Search and Filter Posts]
+    U --> UC8[Like and Comment]
+    U --> UC9[Save Posts]
+    U --> UC10[Follow or Unfollow Users]
+    U --> UC11[View Profile]
+    U --> UC12[Send and Receive Messages]
+
+    A --> AC1[View Dashboard]
+    A --> AC2[Manage Users]
+    A --> AC3[Block or Unblock User]
+    A --> AC4[Monitor Posts]
+
+    UC1 --> S
+    UC2 --> S
+    UC3 --> S
+    UC4 --> S
+    UC5 --> S
+    UC6 --> S
+    UC7 --> S
+    UC8 --> S
+    UC9 --> S
+    UC10 --> S
+    UC11 --> S
+    UC12 --> S
+    AC1 --> S
+    AC2 --> S
+    AC3 --> S
+    AC4 --> S

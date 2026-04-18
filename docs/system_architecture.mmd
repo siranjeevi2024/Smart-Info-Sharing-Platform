@@ -1,0 +1,31 @@
+flowchart TD
+    A[User Browser] --> B[React Frontend]
+    B --> C[Pages and Components]
+    B --> D[Auth Context]
+    B --> E[Axios API Client]
+    B --> F[Socket.IO Client]
+
+    E --> G[Express.js Server]
+    F --> H[Socket.IO Gateway]
+
+    G --> I[Auth Routes and Controllers]
+    G --> J[Post Routes and Controllers]
+    G --> K[User Routes and Controllers]
+    G --> L[Message Routes and Controllers]
+    G --> M[Admin Routes and Controllers]
+
+    I --> N[(MongoDB)]
+    J --> N
+    K --> N
+    L --> N
+    M --> N
+    H --> N
+
+    I --> O[JWT Authentication]
+    I --> P[Google OAuth]
+    I --> Q[Password Reset Email]
+
+    J --> R[Posts, Likes, Comments, Tags]
+    K --> S[Profiles, Follow System, Status]
+    L --> T[Private Chat and Read Status]
+    M --> U[Dashboard and Moderation]

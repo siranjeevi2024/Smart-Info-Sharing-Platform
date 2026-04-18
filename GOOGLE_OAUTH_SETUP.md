@@ -32,9 +32,9 @@
    - Name: Smart Info Platform Web Client
    - Authorized JavaScript origins:
      - http://localhost:3000
-     - http://localhost:5000
+     - http://localhost:5002
    - Authorized redirect URIs:
-     - http://localhost:5000/api/auth/google/callback
+     - http://localhost:5002/api/auth/google/callback
    - Click "Create"
 
 5. Copy the Client ID and Client Secret
@@ -69,7 +69,7 @@ Restart both backend and frontend servers.
 ## Troubleshooting
 
 **Error: redirect_uri_mismatch**
-- Make sure the redirect URI in Google Console exactly matches: `http://localhost:5000/api/auth/google/callback`
+- Make sure the redirect URI in Google Console exactly matches: `http://localhost:5002/api/auth/google/callback`
 
 **Error: Access blocked**
 - Add your email to test users in OAuth consent screen

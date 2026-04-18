@@ -1,0 +1,19 @@
+flowchart TD
+    C[Client Browser] --> FE[React Frontend Application]
+    FE --> BE[Node.js and Express Server]
+    FE --> RT[Socket.IO Client]
+
+    RT --> SO[Socket.IO Server]
+    BE --> DB[(MongoDB Database)]
+    BE --> GO[Google OAuth Service]
+    BE --> EM[Email Service]
+
+    subgraph App Server
+        BE
+        SO
+    end
+
+    subgraph External Services
+        GO
+        EM
+    end

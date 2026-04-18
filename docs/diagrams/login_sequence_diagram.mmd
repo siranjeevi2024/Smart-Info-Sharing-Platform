@@ -1,0 +1,16 @@
+sequenceDiagram
+    actor User
+    participant Frontend as React Frontend
+    participant Backend as Express Backend
+    participant DB as MongoDB
+    participant Token as JWT Service
+
+    User->>Frontend: Enter email and password
+    Frontend->>Backend: POST /api/auth/login
+    Backend->>DB: Find user by email
+    DB-->>Backend: User record
+    Backend->>Backend: Verify password and role status
+    Backend->>Token: Generate JWT
+    Token-->>Backend: Signed token
+    Backend-->>Frontend: User details and token
+    Frontend-->>User: Login success and redirect

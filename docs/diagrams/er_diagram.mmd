@@ -1,0 +1,53 @@
+erDiagram
+    USER {
+        string _id
+        string username
+        string email
+        string password
+        string role
+        string avatar
+        string bio
+        boolean isBlocked
+        boolean isOnline
+    }
+
+    POST {
+        string _id
+        string title
+        string description
+        string category
+        int views
+        date createdAt
+    }
+
+    MESSAGE {
+        string _id
+        string content
+        string image
+        string messageType
+        boolean read
+        date createdAt
+    }
+
+    NOTIFICATION {
+        string _id
+        string type
+        string message
+        boolean read
+        date createdAt
+    }
+
+    COMMENT {
+        string text
+        date createdAt
+    }
+
+    USER ||--o{ POST : creates
+    USER ||--o{ MESSAGE : sends
+    USER ||--o{ MESSAGE : receives
+    USER ||--o{ NOTIFICATION : gets
+    POST ||--o{ COMMENT : contains
+    USER ||--o{ COMMENT : writes
+    USER }o--o{ USER : follows
+    USER }o--o{ POST : likes
+    USER }o--o{ POST : saves

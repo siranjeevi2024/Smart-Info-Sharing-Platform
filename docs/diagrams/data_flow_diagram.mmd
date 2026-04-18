@@ -1,0 +1,25 @@
+flowchart TD
+    U[User] --> I[Input Request]
+    I --> F[React Frontend]
+    F --> API[Axios and REST API Calls]
+    F --> SOC[Socket.IO Events]
+
+    API --> B[Express Backend]
+    SOC --> B
+
+    B --> AUTH[Authentication Processing]
+    B --> POST[Post Management]
+    B --> USER[User Profile Management]
+    B --> MSG[Message Handling]
+    B --> ADM[Admin Operations]
+
+    AUTH --> DB[(MongoDB)]
+    POST --> DB
+    USER --> DB
+    MSG --> DB
+    ADM --> DB
+
+    DB --> B
+    B --> O[Processed Response]
+    O --> F
+    F --> U

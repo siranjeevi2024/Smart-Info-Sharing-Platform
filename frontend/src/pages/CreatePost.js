@@ -3,103 +3,123 @@ import { useNavigate } from 'react-router-dom';
 import API from '../utils/api';
 import { toast } from 'react-toastify';
 
-const CreatePost = () => {
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    category: '',
-    tags: ''
-  });
-  const navigate = useNavigate();
+const categories = ['Technology', 'Science', 'Business', 'Education', 'Health', 'Other'];
 
-  const categories = ['Technology', 'Science', 'Business', 'Education', 'Health', 'Other'];
+const categoryIcons = {
+  Technology: '💻', Science: '🔬', Business: '📈',
+  Education: '📚', Health: '❤️', Other: '✨'
+};
+
+const CreatePost = () => {
+  const [formData, setFormData] = useState({ title: '', description: '', category: '', tags: '' });
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
-      const postData = {
+      await API.post('/posts', {
         ...formData,
-        tags: formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag)
-      };
-
-      await API.post('/posts', postData);
-      toast.success('Post created successfully!');
+        tags: formData.tags.split(',').map(t => t.trim()).filter(Boolean)
+      });
+      toast.success('Post published successfully!');
       navigate('/');
     } catch (error) {
       toast.error(error.response?.data?.error || 'Failed to create post');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 py-12 px-4">
-      <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-8">
-        <h2 className="text-3xl font-bold mb-6">Create New Post</h2>
+    <div className="page-container">
+      <div className="container mx-auto px-4 max-w-2xl">
+        <div className="mb-8 animate-slide-up">
+          <h1 className="section-title">Create a new post</h1>
+          <p className="text-slate-500 mt-1">Share your knowledge with the community</p>
+        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label className="block text-sm font-medium mb-2">Title</label>
-            <input
-              type="text"
-              required
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-              value={formData.title}
-              onChange={(e) => setFormData({...formData, title: e.target.value})}
-            />
-          </div>
+        <div className="card p-8 animate-slide-up">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-1.5">Post Title</label>
+              <input
+                type="text"
+                required
+                placeholder="Write a compelling title..."
+                className="input-field text-lg font-medium"
+                value={formData.title}
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              />
+            </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-2">Description</label>
-            <textarea
-              required
-              rows="6"
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-              value={formData.description}
-              onChange={(e) => setFormData({...formData, description: e.target.value})}
-            />
-          </div>
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-1.5">Content</label>
+              <textarea
+                required
+                rows="8"
+                placeholder="Share your thoughts, insights, or knowledge..."
+                className="input-field resize-none leading-relaxed"
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              />
+              <p className="text-xs text-slate-400 mt-1">{formData.description.length} characters</p>
+            </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-2">Category</label>
-            <select
-              required
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-              value={formData.category}
-              onChange={(e) => setFormData({...formData, category: e.target.value})}
-            >
-              <option value="">Select Category</option>
-              {categories.map(cat => (
-                <option key={cat} value={cat}>{cat}</option>
-              ))}
-            </select>
-          </div>
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-3">Category</label>
+              <div className="grid grid-cols-3 gap-2">
+                {categories.map(cat => (
+                  <button
+                    key={cat}
+                    type="button"
+                    onClick={() => setFormData({ ...formData, category: cat })}
+                    className={`flex items-center gap-2 px-3 py-2.5 rounded-xl border-2 text-sm font-medium transition-all ${
+                      formData.category === cat
+                        ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
+                        : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300'
+                    }`}
+                  >
+                    <span>{categoryIcons[cat]}</span> {cat}
+                  </button>
+                ))}
+              </div>
+              {!formData.category && <p className="text-xs text-red-400 mt-1">Please select a category</p>}
+            </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-2">Tags (comma separated)</label>
-            <input
-              type="text"
-              placeholder="react, javascript, tutorial"
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-              value={formData.tags}
-              onChange={(e) => setFormData({...formData, tags: e.target.value})}
-            />
-          </div>
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+                Tags <span className="text-slate-400 font-normal">(comma separated)</span>
+              </label>
+              <input
+                type="text"
+                placeholder="react, javascript, tutorial"
+                className="input-field"
+                value={formData.tags}
+                onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
+              />
+              {formData.tags && (
+                <div className="flex flex-wrap gap-1.5 mt-2">
+                  {formData.tags.split(',').map(t => t.trim()).filter(Boolean).map((tag, i) => (
+                    <span key={i} className="badge bg-indigo-100 text-indigo-700">#{tag}</span>
+                  ))}
+                </div>
+              )}
+            </div>
 
-          <div className="flex gap-4">
-            <button
-              type="submit"
-              className="flex-1 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700"
-            >
-              Create Post
-            </button>
-            <button
-              type="button"
-              onClick={() => navigate('/')}
-              className="flex-1 bg-gray-300 text-gray-700 py-2 rounded-lg hover:bg-gray-400"
-            >
-              Cancel
-            </button>
-          </div>
-        </form>
+            <div className="flex gap-3 pt-2">
+              <button type="submit" disabled={loading} className="btn-primary flex-1 flex items-center justify-center gap-2">
+                {loading ? (
+                  <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> Publishing...</>
+                ) : '🚀 Publish Post'}
+              </button>
+              <button type="button" onClick={() => navigate('/')} className="btn-secondary flex-1">
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );
