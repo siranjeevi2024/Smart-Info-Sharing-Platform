@@ -73,51 +73,76 @@ const SkeletonCard = () => (
   </div>
 );
 
+const SLIDE_DURATION = 4000;
+
 const HeroCarousel = ({ username }) => {
   const [current, setCurrent] = useState(0);
+  const [progress, setProgress] = useState(0);
+  const [paused, setPaused] = useState(false);
   const intervalRef = useRef(null);
+  const progressRef = useRef(null);
+  const startTimeRef = useRef(null);
 
-  const startAutoSlide = () => {
+  const clearTimers = () => {
     clearInterval(intervalRef.current);
-    intervalRef.current = setInterval(() => {
+    cancelAnimationFrame(progressRef.current);
+  };
+
+  const startSlide = (index = null) => {
+    clearTimers();
+    if (index !== null) setCurrent(index);
+    setProgress(0);
+    startTimeRef.current = performance.now();
+
+    const tick = (now) => {
+      const elapsed = now - startTimeRef.current;
+      const pct = Math.min((elapsed / SLIDE_DURATION) * 100, 100);
+      setProgress(pct);
+      if (pct < 100) {
+        progressRef.current = requestAnimationFrame(tick);
+      }
+    };
+    progressRef.current = requestAnimationFrame(tick);
+
+    intervalRef.current = setTimeout(() => {
       setCurrent((prev) => (prev + 1) % heroSlides.length);
-    }, 3500);
+      startSlide();
+    }, SLIDE_DURATION);
   };
 
   useEffect(() => {
-    startAutoSlide();
-    return () => clearInterval(intervalRef.current);
-  }, []);
+    startSlide();
+    return clearTimers;
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const goTo = (index) => {
-    setCurrent(index);
-    startAutoSlide();
+  const goTo = (index) => startSlide(index);
+  const goPrev = () => startSlide((current - 1 + heroSlides.length) % heroSlides.length);
+  const goNext = () => startSlide((current + 1) % heroSlides.length);
+
+  const handleMouseEnter = () => {
+    setPaused(true);
+    clearTimers();
   };
 
-  const goPrev = () => {
-    setCurrent((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
-    startAutoSlide();
-  };
-
-  const goNext = () => {
-    setCurrent((prev) => (prev + 1) % heroSlides.length);
-    startAutoSlide();
+  const handleMouseLeave = () => {
+    setPaused(false);
+    startSlide(current);
   };
 
   return (
     <div
-      className="mb-6 overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-slate-200"
-      onMouseEnter={() => clearInterval(intervalRef.current)}
-      onMouseLeave={startAutoSlide}
+      className="relative mb-6 overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-slate-200"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
-      <div
-        className="flex transition-transform duration-700 ease-out"
-        style={{ transform: `translateX(-${current * 100}%)` }}
-      >
-        {heroSlides.map((slide) => (
+      {/* Slides — fade crossfade like Flipkart */}
+      <div className="relative" style={{ minHeight: '260px' }}>
+        {heroSlides.map((slide, index) => (
           <section
             key={slide.title}
-            className={`min-w-full bg-gradient-to-r ${slide.accent} p-5 sm:p-8`}
+            className={`absolute inset-0 bg-gradient-to-r ${slide.accent} p-5 sm:p-8 transition-opacity duration-500 ${
+              index === current ? 'opacity-100 z-10' : 'opacity-0 z-0'
+            }`}
           >
             <div className="grid items-center gap-6 lg:grid-cols-[1.4fr_0.7fr]">
               <div>
@@ -167,51 +192,52 @@ const HeroCarousel = ({ username }) => {
         ))}
       </div>
 
+      {/* Left arrow */}
       <button
         type="button"
         onClick={goPrev}
-        className="absolute"
-        style={{ display: 'none' }}
-      />
+        className="absolute left-3 top-1/2 z-20 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-white/80 text-slate-700 shadow-md backdrop-blur transition hover:bg-white hover:scale-110"
+        aria-label="Previous slide"
+      >
+        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
 
-      <div className="relative -mt-16 flex items-center justify-between px-3 pb-3 sm:px-4">
-        <button
-          type="button"
-          onClick={goPrev}
-          className="flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-slate-700 shadow-md transition hover:bg-white"
-          aria-label="Previous slide"
-        >
-          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
+      {/* Right arrow */}
+      <button
+        type="button"
+        onClick={goNext}
+        className="absolute right-3 top-1/2 z-20 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-white/80 text-slate-700 shadow-md backdrop-blur transition hover:bg-white hover:scale-110"
+        aria-label="Next slide"
+      >
+        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
 
-        <div className="rounded-full bg-white/90 px-3 py-2 shadow-md backdrop-blur">
-          <div className="flex items-center gap-2">
-            {heroSlides.map((slide, index) => (
-              <button
-                key={slide.title}
-                type="button"
-                onClick={() => goTo(index)}
-                className={`h-2.5 rounded-full transition-all duration-300 ${
-                  current === index ? 'w-7 bg-indigo-600' : 'w-2.5 bg-slate-300 hover:bg-slate-400'
-                }`}
-                aria-label={`Go to slide ${index + 1}`}
-              />
-            ))}
-          </div>
+      {/* Bottom bar: dots + progress */}
+      <div className="relative z-20 flex flex-col items-center gap-2 bg-white/10 pb-3 pt-2 backdrop-blur-sm">
+        <div className="flex items-center gap-2">
+          {heroSlides.map((slide, index) => (
+            <button
+              key={slide.title}
+              type="button"
+              onClick={() => goTo(index)}
+              className={`rounded-full transition-all duration-300 ${
+                current === index ? 'h-2.5 w-7 bg-white' : 'h-2 w-2 bg-white/40 hover:bg-white/70'
+              }`}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
         </div>
-
-        <button
-          type="button"
-          onClick={goNext}
-          className="flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-slate-700 shadow-md transition hover:bg-white"
-          aria-label="Next slide"
-        >
-          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
+        {/* Progress bar */}
+        <div className="h-0.5 w-24 overflow-hidden rounded-full bg-white/20">
+          <div
+            className="h-full rounded-full bg-white transition-none"
+            style={{ width: `${paused ? progress : progress}%` }}
+          />
+        </div>
       </div>
     </div>
   );
