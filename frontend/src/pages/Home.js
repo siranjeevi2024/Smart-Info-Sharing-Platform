@@ -217,7 +217,7 @@ const HeroCarousel = ({ username }) => {
       </button>
 
       {/* Bottom bar: dots + progress */}
-      <div className="relative z-20 flex flex-col items-center gap-2 bg-white/10 pb-3 pt-2 backdrop-blur-sm">
+      <div className="relative z-20 flex flex-col items-center gap-2 bg-white/20 pb-3 pt-2">
         <div className="flex items-center gap-2">
           {heroSlides.map((slide, index) => (
             <button
@@ -225,17 +225,16 @@ const HeroCarousel = ({ username }) => {
               type="button"
               onClick={() => goTo(index)}
               className={`rounded-full transition-all duration-300 ${
-                current === index ? 'h-2.5 w-7 bg-white' : 'h-2 w-2 bg-white/40 hover:bg-white/70'
+                current === index ? 'h-2.5 w-7 bg-white' : 'h-2 w-2 bg-white/50 hover:bg-white/80'
               }`}
               aria-label={`Go to slide ${index + 1}`}
             />
           ))}
         </div>
-        {/* Progress bar */}
-        <div className="h-0.5 w-24 overflow-hidden rounded-full bg-white/20">
+        <div className="h-0.5 w-24 overflow-hidden rounded-full bg-white/30">
           <div
             className="h-full rounded-full bg-white transition-none"
-            style={{ width: `${paused ? progress : progress}%` }}
+            style={{ width: `${progress}%` }}
           />
         </div>
       </div>
