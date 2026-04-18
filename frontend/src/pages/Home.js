@@ -168,12 +168,12 @@ const HeroCarousel = ({ username }) => {
       onMouseLeave={handleMouseLeave}
     >
       {/* Slides — fade crossfade like Flipkart */}
-      <div className="relative" style={{ minHeight: '260px' }}>
+      <div className="relative" style={{ minHeight: '360px' }}>
         <section
           key={activeSlide.title}
           className={`bg-gradient-to-r ${activeSlide.accent} animate-fade-in p-5 sm:p-8`}
         >
-          <div className="grid items-center gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+          <div className="grid items-center gap-6 lg:grid-cols-[1fr_0.95fr]">
             <div>
               <p className="mb-3 inline-flex rounded-full bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-white/90">
                 {activeSlide.tag}
@@ -206,17 +206,17 @@ const HeroCarousel = ({ username }) => {
                       key={`${activeSlide.title}-${index}`}
                       src={image}
                       alt={`${activeSlide.title} preview ${index + 1}`}
-                      className="h-24 w-full rounded-2xl object-cover"
+                      className="h-20 w-full rounded-xl object-cover"
                     />
                   ))}
                 </div>
-                <div className="mt-4">
+                <div className="mt-3">
                   <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
                     {activeSlide.statLabel}
                   </p>
                   <div className="mt-2 flex items-end justify-between gap-3">
-                    <p className="text-4xl font-black text-slate-900">{activeSlide.statValue}</p>
-                    <div className="rounded-xl bg-slate-100 px-3 py-2 text-right">
+                    <p className="text-3xl font-black text-slate-900">{activeSlide.statValue}</p>
+                    <div className="rounded-xl bg-slate-100 px-3 py-1.5 text-right">
                       <p className="text-[11px] uppercase tracking-[0.18em] text-slate-400">Live</p>
                       <p className="text-sm font-bold text-slate-700">Updated</p>
                     </div>
