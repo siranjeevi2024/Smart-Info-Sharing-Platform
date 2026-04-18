@@ -14,10 +14,11 @@ const {
   broadcastMessage
 } = require('../controllers/postController');
 const { protect } = require('../middleware/auth');
+const { postLimiter } = require('../middleware/security');
 
 router.route('/')
   .get(getPosts)
-  .post(protect, createPost);
+  .post(protect, postLimiter, createPost);
 
 router.get('/saved', protect, getSavedPosts);
 router.get('/trending', getTrendingPosts);

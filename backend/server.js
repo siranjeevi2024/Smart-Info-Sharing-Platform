@@ -4,8 +4,13 @@ const cors = require('cors');
 const http = require('http');
 const socketIo = require('socket.io');
 const session = require('express-session');
+const helmet = require('helmet');
 const passport = require('./config/passport');
 const connectDB = require('./config/db');
+const {
+  globalLimiter, authLimiter, postLimiter, aiLimiter,
+  sanitizeInput, xssProtection, hppProtection, jsonLimiter, securityLogger
+} = require('./middleware/security');
 
 const allowedOrigins = (process.env.FRONTEND_URL || 'http://localhost:3000')
   .split(',')
@@ -82,16 +87,34 @@ const io = socketIo(server, {
 
 app.set('trust proxy', 1);
 
+// Security Headers
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: 'cross-origin' },
+  contentSecurityPolicy: false,
+}));
+
 // Connect to MongoDB
 connectDB();
 
 // Middleware
 app.use(cors(corsOptions));
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(globalLimiter);
+app.use(sanitizeInput);
+app.use(xssProtection);
+app.use(hppProtection);
+app.use(jsonLimiter);
+app.use(securityLogger);
 app.use(session({
   secret: process.env.JWT_SECRET,
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000
+  }
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -103,12 +126,12 @@ app.use((req, res, next) => {
 });
 
 // Routes
-app.use('/api/auth', require('./routes/auth'));
+app.use('/api/auth', authLimiter, require('./routes/auth'));
 app.use('/api/posts', require('./routes/posts'));
 app.use('/api/admin', require('./routes/admin'));
 app.use('/api/messages', require('./routes/messages'));
 app.use('/api/users', require('./routes/users'));
-app.use('/api/ai', require('./routes/ai'));
+app.use('/api/ai', aiLimiter, require('./routes/ai'));
 
 // Socket.io
 io.on('connection', (socket) => {
