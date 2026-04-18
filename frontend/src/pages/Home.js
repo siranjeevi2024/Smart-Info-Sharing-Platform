@@ -101,7 +101,7 @@ const SkeletonCard = () => (
   </div>
 );
 
-const SLIDE_DURATION = 2000;
+const SLIDE_DURATION = 5000;
 
 const HeroCarousel = ({ username }) => {
   const [current, setCurrent] = useState(0);
@@ -234,13 +234,15 @@ const HeroCarousel = ({ username }) => {
             type="button"
             onClick={() => goTo(index)}
             className={`overflow-hidden rounded-full transition-all duration-300 ${
-              current === index ? 'h-2.5 w-10 bg-slate-900' : 'h-2.5 w-3 bg-slate-300 hover:bg-slate-400'
+              current === index
+                ? 'h-2.5 w-10 bg-white/95 ring-1 ring-black/10'
+                : 'h-2.5 w-3 bg-slate-300 hover:bg-slate-400'
             }`}
             aria-label={`Go to slide ${index + 1}`}
           >
             {current === index && (
               <span
-                className="block h-full rounded-full bg-black/90 animate-pulse"
+                className="animate-indicator-fill block h-full rounded-full bg-black"
                 style={{ animationDuration: `${SLIDE_DURATION}ms` }}
               />
             )}

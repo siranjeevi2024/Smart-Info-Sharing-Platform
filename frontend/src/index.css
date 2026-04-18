@@ -49,6 +49,10 @@
   .animate-slide-up {
     animation: slideUp 0.3s ease-out;
   }
+  .animate-indicator-fill {
+    animation: indicatorFill linear forwards;
+    transform-origin: left center;
+  }
   .skeleton {
     @apply bg-slate-200 animate-pulse rounded-lg;
   }
@@ -72,6 +76,11 @@
 @keyframes slideIn {
   from { transform: translateX(100%); }
   to { transform: translateX(0); }
+}
+
+@keyframes indicatorFill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
 }
 
 .animate-marquee {
