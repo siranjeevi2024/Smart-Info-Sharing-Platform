@@ -39,7 +39,14 @@ const heroSlides = [
     title: 'Trending ideas from top contributors',
     description: 'Discover the most discussed posts, save useful insights, and stay ahead with community-picked content.',
     accent: 'from-sky-500 via-indigo-500 to-violet-600',
-    image: makeSlideImage(['#0ea5e9', '#7c3aed'], 'Trending feed'),
+    images: [
+      makeSlideImage(['#0ea5e9', '#7c3aed'], 'Trending feed'),
+      makeSlideImage(['#38bdf8', '#6366f1'], 'Top authors'),
+      makeSlideImage(['#2563eb', '#8b5cf6'], 'Saved insights'),
+      makeSlideImage(['#1d4ed8', '#7c3aed'], 'Fresh topics'),
+      makeSlideImage(['#0f766e', '#4f46e5'], 'Smart picks'),
+      makeSlideImage(['#0284c7', '#9333ea'], 'Hot discussions')
+    ],
     statLabel: 'Featured posts',
     statValue: '1.2K+',
     cta: 'Explore Trending',
@@ -50,7 +57,14 @@ const heroSlides = [
     title: 'Publish your next post in minutes',
     description: 'Share tutorials, explainers, and updates with a cleaner writing flow built for quick publishing.',
     accent: 'from-orange-400 via-rose-500 to-pink-600',
-    image: makeSlideImage(['#fb923c', '#e11d48'], 'Quick publishing'),
+    images: [
+      makeSlideImage(['#fb923c', '#e11d48'], 'Quick publishing'),
+      makeSlideImage(['#fdba74', '#f43f5e'], 'Draft ideas'),
+      makeSlideImage(['#f97316', '#db2777'], 'Clean editor'),
+      makeSlideImage(['#fb7185', '#ea580c'], 'Fast writing'),
+      makeSlideImage(['#f59e0b', '#e11d48'], 'Story blocks'),
+      makeSlideImage(['#ea580c', '#be185d'], 'Post previews')
+    ],
     statLabel: 'Posts this week',
     statValue: '8.4K',
     cta: 'Create Post',
@@ -61,7 +75,14 @@ const heroSlides = [
     title: 'Message creators and build your network',
     description: 'Start conversations directly from the feed and turn useful posts into real connections.',
     accent: 'from-emerald-400 via-teal-500 to-cyan-600',
-    image: makeSlideImage(['#34d399', '#0891b2'], 'Community chat'),
+    images: [
+      makeSlideImage(['#34d399', '#0891b2'], 'Community chat'),
+      makeSlideImage(['#2dd4bf', '#0f766e'], 'Team updates'),
+      makeSlideImage(['#10b981', '#0284c7'], 'Creator network'),
+      makeSlideImage(['#22c55e', '#0ea5e9'], 'Inbox flow'),
+      makeSlideImage(['#14b8a6', '#0369a1'], 'Live messages'),
+      makeSlideImage(['#059669', '#06b6d4'], 'New connections')
+    ],
     statLabel: 'Active chats',
     statValue: '24K+',
     cta: 'Open Messages',
@@ -179,11 +200,16 @@ const HeroCarousel = ({ username }) => {
 
             <div className="rounded-3xl border border-white/20 bg-white/12 p-4">
               <div className="overflow-hidden rounded-2xl bg-white/95 p-3 text-slate-800 shadow-lg">
-                <img
-                  src={activeSlide.image}
-                  alt={activeSlide.title}
-                  className="h-44 w-full rounded-2xl object-cover"
-                />
+                <div className="grid grid-cols-3 gap-2">
+                  {activeSlide.images.map((image, index) => (
+                    <img
+                      key={`${activeSlide.title}-${index}`}
+                      src={image}
+                      alt={`${activeSlide.title} preview ${index + 1}`}
+                      className="h-24 w-full rounded-2xl object-cover"
+                    />
+                  ))}
+                </div>
                 <div className="mt-4">
                   <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
                     {activeSlide.statLabel}
@@ -235,8 +261,8 @@ const HeroCarousel = ({ username }) => {
             onClick={() => goTo(index)}
             className={`overflow-hidden rounded-full transition-all duration-300 ${
               current === index
-                ? 'h-2.5 w-10 bg-white/95 ring-1 ring-black/10'
-                : 'h-2.5 w-3 bg-slate-300 hover:bg-slate-400'
+                ? 'h-1 w-10 bg-white/95 ring-1 ring-black/10'
+                : 'h-1 w-3 bg-slate-300 hover:bg-slate-400'
             }`}
             aria-label={`Go to slide ${index + 1}`}
           >
