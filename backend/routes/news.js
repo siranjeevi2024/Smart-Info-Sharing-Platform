@@ -13,8 +13,10 @@ router.get('/', async (req, res) => {
 
     const response = await fetch(endpoint);
     const data = await response.json();
+    console.log('GNews response articles:', data.articles?.length, 'error:', data.errors);
     res.json(data);
-  } catch {
+  } catch (err) {
+    console.error('News fetch error:', err.message);
     res.status(500).json({ error: 'Failed to fetch news' });
   }
 });
