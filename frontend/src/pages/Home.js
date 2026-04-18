@@ -95,10 +95,7 @@ const InfoBanner = () => {
           </svg>
         </button>
 
-        {/* Slide counter */}
-        <div className="absolute bottom-3 right-4 bg-black/40 text-white text-xs px-2.5 py-1 rounded-full backdrop-blur-sm">
-          {current + 1} / {infoBannerItems.length}
-        </div>
+
       </div>
 
       {/* Black ticker below */}
