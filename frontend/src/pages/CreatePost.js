@@ -187,6 +187,40 @@ const AIAssistant = ({ title, description, onApplyTags }) => {
   );
 };
 
+const useSpeechToText = (onResult) => {
+  const [listening, setListening] = useState(false);
+  const recognitionRef = useRef(null);
+
+  const toggle = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) { toast.error('Speech recognition not supported in this browser'); return; }
+
+    if (listening) {
+      recognitionRef.current?.stop();
+      setListening(false);
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = false;
+    recognition.lang = 'en-US';
+    recognition.onresult = (e) => {
+      const transcript = Array.from(e.results)
+        .map((r) => r[0].transcript)
+        .join(' ');
+      onResult(transcript);
+    };
+    recognition.onerror = () => { setListening(false); toast.error('Microphone error'); };
+    recognition.onend = () => setListening(false);
+    recognitionRef.current = recognition;
+    recognition.start();
+    setListening(true);
+  };
+
+  return { listening, toggle };
+};
+
 const CreatePost = () => {
   const [formData, setFormData] = useState({ title: '', description: '', category: '', tags: '' });
   const [image, setImage] = useState(null);
@@ -195,6 +229,10 @@ const CreatePost = () => {
   const [dragOver, setDragOver] = useState(false);
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
+
+  const { listening, toggle: toggleMic } = useSpeechToText((transcript) =>
+    setFormData((prev) => ({ ...prev, description: prev.description ? prev.description + ' ' + transcript : transcript }))
+  );
 
   const handleImageSelect = (file) => {
     if (!file) return;
@@ -287,7 +325,23 @@ const CreatePost = () => {
 
             {/* Content */}
             <div className="card p-5">
-              <label className="block text-sm font-semibold text-slate-700 mb-1.5">Content <span className="text-red-400">*</span></label>
+              <div className="mb-1.5 flex items-center justify-between">
+                <label className="block text-sm font-semibold text-slate-700">Content <span className="text-red-400">*</span></label>
+                <button
+                  type="button"
+                  onClick={toggleMic}
+                  className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-semibold transition-all ${
+                    listening
+                      ? 'animate-pulse bg-red-100 text-red-600 ring-2 ring-red-300'
+                      : 'bg-slate-100 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600'
+                  }`}
+                >
+                  <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                  </svg>
+                  {listening ? 'Listening... (click to stop)' : 'Speak to type'}
+                </button>
+              </div>
               <textarea
                 required
                 rows="8"
