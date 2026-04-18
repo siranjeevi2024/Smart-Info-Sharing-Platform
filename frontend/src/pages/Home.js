@@ -102,34 +102,30 @@ const InfoBanner = () => {
       </div>
 
       {/* Black ticker below */}
-      <div className="mt-2 bg-slate-900 rounded-xl overflow-hidden">
-        <div className="overflow-hidden py-2 px-4">
-          <div className="flex gap-12 animate-marquee whitespace-nowrap">
-              {[
-                '🚀 10,000+ users sharing knowledge daily',
-                '🔥 50,000+ posts published this month',
-                '💬 Real-time messaging now available',
-                '🤖 AI Writing Assistant — try it on your next post',
-                '📚 New posts in Technology, Science & Business',
-                '🏆 Weekly top contributors featured on Trending',
-                '🌍 Connect with users from around the world',
-                '✨ Create your first post and get noticed',
-              ].concat([
-                '🚀 10,000+ users sharing knowledge daily',
-                '🔥 50,000+ posts published this month',
-                '💬 Real-time messaging now available',
-                '🤖 AI Writing Assistant — try it on your next post',
-                '📚 New posts in Technology, Science & Business',
-                '🏆 Weekly top contributors featured on Trending',
-                '🌍 Connect with users from around the world',
-                '✨ Create your first post and get noticed',
-              ]).map((msg, i) => (
-                <span key={i} className="text-slate-300 text-xs font-medium">
-                  {msg}
-                  <span className="mx-6 text-slate-600">•</span>
-                </span>
-              ))}
-          </div>
+      <div className="mt-2 bg-slate-900 rounded-xl overflow-hidden py-2 px-4">
+        <div className="flex gap-12 animate-marquee whitespace-nowrap">
+          {[
+            '🚀 10,000+ users sharing knowledge daily',
+            '🔥 50,000+ posts published this month',
+            '💬 Real-time messaging now available',
+            '🤖 AI Writing Assistant — try it on your next post',
+            '📚 New posts in Technology, Science & Business',
+            '🏆 Weekly top contributors featured on Trending',
+            '🌍 Connect with users from around the world',
+            '✨ Create your first post and get noticed',
+            '🚀 10,000+ users sharing knowledge daily',
+            '🔥 50,000+ posts published this month',
+            '💬 Real-time messaging now available',
+            '🤖 AI Writing Assistant — try it on your next post',
+            '📚 New posts in Technology, Science & Business',
+            '🏆 Weekly top contributors featured on Trending',
+            '🌍 Connect with users from around the world',
+            '✨ Create your first post and get noticed',
+          ].map((msg, i) => (
+            <span key={i} className="text-slate-300 text-xs font-medium flex-shrink-0">
+              {msg} <span className="mx-4 text-slate-600">•</span>
+            </span>
+          ))}
         </div>
       </div>
 
