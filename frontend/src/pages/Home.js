@@ -147,10 +147,6 @@ const HeroCarousel = ({ username }) => {
     return clearTimers;
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const goTo = (index) => startSlide(index);
-  const goPrev = () => startSlide((current - 1 + heroSlides.length) % heroSlides.length);
-  const goNext = () => startSlide((current + 1) % heroSlides.length);
-
   const handleMouseEnter = () => {
     clearTimers();
   };
@@ -226,54 +222,6 @@ const HeroCarousel = ({ username }) => {
             </div>
           </div>
         </section>
-      </div>
-
-      {/* Left arrow */}
-      <button
-        type="button"
-        onClick={goPrev}
-        className="absolute left-3 top-1/2 z-20 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-white/80 text-slate-700 shadow-md transition hover:bg-white hover:scale-110"
-        aria-label="Previous slide"
-      >
-        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
-        </svg>
-      </button>
-
-      {/* Right arrow */}
-      <button
-        type="button"
-        onClick={goNext}
-        className="absolute right-3 top-1/2 z-20 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-white/80 text-slate-700 shadow-md transition hover:bg-white hover:scale-110"
-        aria-label="Next slide"
-      >
-        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-        </svg>
-      </button>
-
-      {/* Dots */}
-      <div className="relative z-20 flex justify-center gap-3 py-4">
-        {heroSlides.map((slide, index) => (
-          <button
-            key={slide.title}
-            type="button"
-            onClick={() => goTo(index)}
-            className={`overflow-hidden rounded-full transition-all duration-300 ${
-              current === index
-                ? 'h-1 w-10 bg-white/95 ring-1 ring-black/10'
-                : 'h-1 w-3 bg-slate-300 hover:bg-slate-400'
-            }`}
-            aria-label={`Go to slide ${index + 1}`}
-          >
-            {current === index && (
-              <span
-                className="animate-indicator-fill block h-full rounded-full bg-black"
-                style={{ animationDuration: `${SLIDE_DURATION}ms` }}
-              />
-            )}
-          </button>
-        ))}
       </div>
     </div>
   );
