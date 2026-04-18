@@ -163,13 +163,13 @@ const HeroCarousel = ({ username }) => {
                   >
                     {slide.cta}
                   </Link>
-                  <div className="inline-flex items-center justify-center rounded-xl border border-white/25 bg-white/10 px-5 py-3 text-sm font-semibold text-white backdrop-blur-sm">
+                  <div className="inline-flex items-center justify-center rounded-xl border border-white/25 bg-white/10 px-5 py-3 text-sm font-semibold text-white">
                     Smart Info Platform
                   </div>
                 </div>
               </div>
 
-              <div className="rounded-3xl border border-white/20 bg-white/12 p-5 backdrop-blur-md">
+              <div className="rounded-3xl border border-white/20 bg-white/12 p-5">
                 <div className="rounded-2xl bg-white/95 p-5 text-slate-800">
                   <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
                     {slide.statLabel}
@@ -196,7 +196,7 @@ const HeroCarousel = ({ username }) => {
       <button
         type="button"
         onClick={goPrev}
-        className="absolute left-3 top-1/2 z-20 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-white/80 text-slate-700 shadow-md backdrop-blur transition hover:bg-white hover:scale-110"
+        className="absolute left-3 top-1/2 z-20 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-white/80 text-slate-700 shadow-md transition hover:bg-white hover:scale-110"
         aria-label="Previous slide"
       >
         <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -208,7 +208,7 @@ const HeroCarousel = ({ username }) => {
       <button
         type="button"
         onClick={goNext}
-        className="absolute right-3 top-1/2 z-20 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-white/80 text-slate-700 shadow-md backdrop-blur transition hover:bg-white hover:scale-110"
+        className="absolute right-3 top-1/2 z-20 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-white/80 text-slate-700 shadow-md transition hover:bg-white hover:scale-110"
         aria-label="Next slide"
       >
         <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
