@@ -78,7 +78,7 @@ const SLIDE_DURATION = 4000;
 const HeroCarousel = ({ username }) => {
   const [current, setCurrent] = useState(0);
   const [progress, setProgress] = useState(0);
-  const [paused, setPaused] = useState(false);
+  const [paused, setPaused] = useState(false); // v2
   const intervalRef = useRef(null);
   const progressRef = useRef(null);
   const startTimeRef = useRef(null);
