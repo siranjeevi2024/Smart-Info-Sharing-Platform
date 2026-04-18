@@ -8,12 +8,38 @@ import { useAuth } from '../context/AuthContext';
 import Landing from './Landing';
 import { API_URL } from '../utils/config';
 
+const makeSlideImage = (palette, label) => {
+  const svg = `
+    <svg width="520" height="360" viewBox="0 0 520 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="bg" x1="32" y1="24" x2="488" y2="336" gradientUnits="userSpaceOnUse">
+          <stop stop-color="${palette[0]}"/>
+          <stop offset="1" stop-color="${palette[1]}"/>
+        </linearGradient>
+      </defs>
+      <rect width="520" height="360" rx="36" fill="url(#bg)"/>
+      <circle cx="403" cy="92" r="74" fill="white" fill-opacity="0.18"/>
+      <circle cx="120" cy="296" r="96" fill="white" fill-opacity="0.14"/>
+      <rect x="52" y="60" width="174" height="18" rx="9" fill="white" fill-opacity="0.28"/>
+      <rect x="52" y="94" width="242" height="28" rx="14" fill="white" fill-opacity="0.92"/>
+      <rect x="52" y="136" width="210" height="18" rx="9" fill="white" fill-opacity="0.24"/>
+      <rect x="52" y="194" width="164" height="92" rx="24" fill="white" fill-opacity="0.92"/>
+      <rect x="238" y="194" width="230" height="42" rx="21" fill="white" fill-opacity="0.22"/>
+      <rect x="238" y="252" width="184" height="18" rx="9" fill="white" fill-opacity="0.18"/>
+      <text x="52" y="332" fill="white" fill-opacity="0.92" font-family="Arial, sans-serif" font-size="26" font-weight="700">${label}</text>
+    </svg>
+  `;
+
+  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+};
+
 const heroSlides = [
   {
     tag: 'Knowledge Week',
     title: 'Trending ideas from top contributors',
     description: 'Discover the most discussed posts, save useful insights, and stay ahead with community-picked content.',
     accent: 'from-sky-500 via-indigo-500 to-violet-600',
+    image: makeSlideImage(['#0ea5e9', '#7c3aed'], 'Trending feed'),
     statLabel: 'Featured posts',
     statValue: '1.2K+',
     cta: 'Explore Trending',
@@ -24,6 +50,7 @@ const heroSlides = [
     title: 'Publish your next post in minutes',
     description: 'Share tutorials, explainers, and updates with a cleaner writing flow built for quick publishing.',
     accent: 'from-orange-400 via-rose-500 to-pink-600',
+    image: makeSlideImage(['#fb923c', '#e11d48'], 'Quick publishing'),
     statLabel: 'Posts this week',
     statValue: '8.4K',
     cta: 'Create Post',
@@ -34,6 +61,7 @@ const heroSlides = [
     title: 'Message creators and build your network',
     description: 'Start conversations directly from the feed and turn useful posts into real connections.',
     accent: 'from-emerald-400 via-teal-500 to-cyan-600',
+    image: makeSlideImage(['#34d399', '#0891b2'], 'Community chat'),
     statLabel: 'Active chats',
     statValue: '24K+',
     cta: 'Open Messages',
@@ -73,7 +101,7 @@ const SkeletonCard = () => (
   </div>
 );
 
-const SLIDE_DURATION = 4000;
+const SLIDE_DURATION = 2000;
 
 const HeroCarousel = ({ username }) => {
   const [current, setCurrent] = useState(0);
@@ -124,7 +152,7 @@ const HeroCarousel = ({ username }) => {
           key={activeSlide.title}
           className={`bg-gradient-to-r ${activeSlide.accent} animate-fade-in p-5 sm:p-8`}
         >
-          <div className="grid items-center gap-6 lg:grid-cols-[1.4fr_0.7fr]">
+          <div className="grid items-center gap-6 lg:grid-cols-[1.1fr_0.9fr]">
             <div>
               <p className="mb-3 inline-flex rounded-full bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-white/90">
                 {activeSlide.tag}
@@ -149,24 +177,26 @@ const HeroCarousel = ({ username }) => {
               </div>
             </div>
 
-            <div className="rounded-3xl border border-white/20 bg-white/12 p-5">
-              <div className="rounded-2xl bg-white/95 p-5 text-slate-800">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-                  {activeSlide.statLabel}
-                </p>
-                <p className="mt-2 text-4xl font-black text-slate-900">{activeSlide.statValue}</p>
-                <div className="mt-5 grid grid-cols-2 gap-3">
-                  <div className="rounded-2xl bg-slate-50 p-3">
-                    <p className="text-xs text-slate-400">Fast discovery</p>
-                    <p className="mt-1 text-sm font-bold text-slate-700">Clean feed filters</p>
-                  </div>
-                  <div className="rounded-2xl bg-slate-50 p-3">
-                    <p className="text-xs text-slate-400">Better engagement</p>
-                    <p className="mt-1 text-sm font-bold text-slate-700">Real-time updates</p>
+            <div className="rounded-3xl border border-white/20 bg-white/12 p-4">
+              <div className="overflow-hidden rounded-2xl bg-white/95 p-3 text-slate-800 shadow-lg">
+                <img
+                  src={activeSlide.image}
+                  alt={activeSlide.title}
+                  className="h-44 w-full rounded-2xl object-cover"
+                />
+                <div className="mt-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                    {activeSlide.statLabel}
+                  </p>
+                  <div className="mt-2 flex items-end justify-between gap-3">
+                    <p className="text-4xl font-black text-slate-900">{activeSlide.statValue}</p>
+                    <div className="rounded-xl bg-slate-100 px-3 py-2 text-right">
+                      <p className="text-[11px] uppercase tracking-[0.18em] text-slate-400">Live</p>
+                      <p className="text-sm font-bold text-slate-700">Updated</p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
           </div>
         </section>
       </div>
@@ -196,17 +226,24 @@ const HeroCarousel = ({ username }) => {
       </button>
 
       {/* Dots */}
-      <div className="relative z-20 flex justify-center gap-2 py-3">
+      <div className="relative z-20 flex justify-center gap-3 py-4">
         {heroSlides.map((slide, index) => (
           <button
             key={slide.title}
             type="button"
             onClick={() => goTo(index)}
-            className={`rounded-full transition-all duration-300 ${
-              current === index ? 'h-2.5 w-7 bg-indigo-600' : 'h-2 w-2 bg-slate-300 hover:bg-slate-400'
+            className={`overflow-hidden rounded-full transition-all duration-300 ${
+              current === index ? 'h-2.5 w-10 bg-slate-900' : 'h-2.5 w-3 bg-slate-300 hover:bg-slate-400'
             }`}
             aria-label={`Go to slide ${index + 1}`}
-          />
+          >
+            {current === index && (
+              <span
+                className="block h-full rounded-full bg-black/90 animate-pulse"
+                style={{ animationDuration: `${SLIDE_DURATION}ms` }}
+              />
+            )}
+          </button>
         ))}
       </div>
     </div>
