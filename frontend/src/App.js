@@ -23,13 +23,21 @@ import UserProfile from './pages/UserProfile';
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth();
-  if (loading) return <div className="min-h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full animate-spin" /></div>;
+  if (loading) return (
+    <div className="min-h-screen flex items-center justify-center bg-slate-50">
+      <div className="w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
   return user ? children : <Navigate to="/login" />;
 };
 
 const AdminRoute = ({ children }) => {
   const { user, loading } = useAuth();
-  if (loading) return <div className="min-h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full animate-spin" /></div>;
+  if (loading) return (
+    <div className="min-h-screen flex items-center justify-center bg-slate-50">
+      <div className="w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
   return user && user.role === 'admin' ? children : <Navigate to="/" />;
 };
 
@@ -37,12 +45,7 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-        {/* Background Orbs */}
-        <div className="bg-orb bg-orb-1" />
-        <div className="bg-orb bg-orb-2" />
-        <div className="bg-orb bg-orb-3" />
-
-        <div className="relative z-10 min-h-screen flex flex-col">
+        <div className="min-h-screen bg-slate-50 flex flex-col">
           <Navbar />
           <div className="flex-grow">
             <Routes>
@@ -65,7 +68,7 @@ function App() {
           </div>
           <Footer />
         </div>
-        <ToastContainer position="top-right" autoClose={3000} theme="dark" />
+        <ToastContainer position="top-right" autoClose={3000} />
       </Router>
     </AuthProvider>
   );

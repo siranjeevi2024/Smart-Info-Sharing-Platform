@@ -30,15 +30,15 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md animate-slide-up">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-4 shadow-lg" style={{ background: 'linear-gradient(135deg, #667eea, #764ba2)' }}>
+          <div className="inline-flex items-center justify-center w-14 h-14 bg-indigo-600 rounded-2xl mb-4 shadow-lg">
             <span className="text-2xl font-black text-white">S</span>
           </div>
-          <h1 className="text-3xl font-bold text-white">Welcome back</h1>
-          <p className="text-slate-400 mt-1">Sign in to your account</p>
+          <h1 className="text-3xl font-bold text-slate-800">Welcome back</h1>
+          <p className="text-slate-500 mt-1">Sign in to your account</p>
         </div>
 
         <div className="card p-8">
@@ -53,7 +53,7 @@ const Login = () => {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-sm font-semibold text-slate-300 mb-1.5">Email address</label>
+              <label className="block text-sm font-semibold text-slate-700 mb-1.5">Email address</label>
               <input
                 type="email"
                 required
@@ -66,7 +66,7 @@ const Login = () => {
 
             <div>
               <div className="flex justify-between items-center mb-1.5">
-                <label className="block text-sm font-semibold text-slate-300">Password</label>
+                <label className="block text-sm font-semibold text-slate-700">Password</label>
                 <Link to="/forgot-password" className="text-xs text-indigo-600 hover:text-indigo-700 font-medium">
                   Forgot password?
                 </Link>
@@ -111,9 +111,9 @@ const Login = () => {
           </button>
         </div>
 
-        <p className="text-center mt-6 text-sm text-slate-400">
+        <p className="text-center mt-6 text-sm text-slate-500">
           Don't have an account?{' '}
-          <Link to="/register" className="text-purple-400 font-semibold hover:text-purple-300">
+          <Link to="/register" className="text-indigo-600 font-semibold hover:text-indigo-700">
             Create one free
           </Link>
         </p>

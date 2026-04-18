@@ -18,26 +18,22 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="glass-nav sticky top-0 z-50">
+    <nav className="bg-white border-b border-slate-100 sticky top-0 z-50 shadow-sm">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
           <Link to="/" className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center shadow-lg" style={{ background: 'linear-gradient(135deg, #667eea, #764ba2)' }}>
+            <div className="w-9 h-9 bg-indigo-600 rounded-xl flex items-center justify-center shadow-sm">
               <span className="text-base font-black text-white">S</span>
             </div>
-            <span className="font-bold text-white text-lg hidden sm:block">Smart <span className="gradient-text">Info</span></span>
+            <span className="font-bold text-slate-800 text-lg hidden sm:block">Smart Info</span>
           </Link>
 
-          {/* Nav Links */}
           {user && (
             <div className="hidden md:flex items-center gap-1">
               {navLinks.map(({ to, label }) => (
                 <Link key={to} to={to}
                   className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                    isActive(to)
-                      ? 'bg-white/15 text-white'
-                      : 'text-slate-300 hover:bg-white/10 hover:text-white'
+                    isActive(to) ? 'bg-indigo-50 text-indigo-600' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-800'
                   }`}
                 >
                   {label}
@@ -46,28 +42,26 @@ const Navbar = () => {
             </div>
           )}
 
-          {/* Right Side */}
           <div className="flex items-center gap-3">
             {user ? (
               <div className="relative group">
-                <button className="flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-white/10 transition">
+                <button className="flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-slate-50 transition">
                   {user.avatar ? (
-                    <img src={user.avatar} alt={user.username} className="w-8 h-8 rounded-full object-cover ring-2 ring-purple-500/50" />
+                    <img src={user.avatar} alt={user.username} className="w-8 h-8 rounded-full object-cover ring-2 ring-slate-200" />
                   ) : (
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm" style={{ background: 'linear-gradient(135deg, #667eea, #764ba2)' }}>
+                    <div className="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
                       {user.username[0].toUpperCase()}
                     </div>
                   )}
-                  <span className="hidden md:block text-sm font-semibold text-slate-200">{user.username}</span>
+                  <span className="hidden md:block text-sm font-semibold text-slate-700">{user.username}</span>
                   <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </button>
 
-                {/* Dropdown */}
-                <div className="absolute right-0 mt-1 w-56 glass-dropdown rounded-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 overflow-hidden">
-                  <div className="px-4 py-3 border-b border-white/10">
-                    <p className="font-semibold text-white text-sm">{user.username}</p>
+                <div className="absolute right-0 mt-1 w-56 bg-white rounded-2xl shadow-xl border border-slate-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 overflow-hidden">
+                  <div className="px-4 py-3 border-b border-slate-100">
+                    <p className="font-semibold text-slate-800 text-sm">{user.username}</p>
                     <p className="text-xs text-slate-400 truncate">{user.email}</p>
                   </div>
                   <div className="py-1">
@@ -76,12 +70,12 @@ const Navbar = () => {
                       { to: '/saved', icon: '🔖', label: 'Saved Posts' },
                       ...(user.role === 'admin' ? [{ to: '/admin', icon: '⚙️', label: 'Admin Panel' }] : []),
                     ].map(({ to, icon, label }) => (
-                      <Link key={to} to={to} className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-300 hover:bg-white/10 hover:text-white transition">
+                      <Link key={to} to={to} className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition">
                         <span>{icon}</span> {label}
                       </Link>
                     ))}
-                    <hr className="my-1 border-white/10" />
-                    <button onClick={handleLogout} className="flex items-center gap-3 px-4 py-2.5 text-sm text-red-400 hover:bg-red-500/10 transition w-full text-left">
+                    <hr className="my-1 border-slate-100" />
+                    <button onClick={handleLogout} className="flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition w-full text-left">
                       <span>🚪</span> Sign out
                     </button>
                   </div>
@@ -97,13 +91,12 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Nav */}
       {user && (
-        <div className="md:hidden border-t border-white/10 px-4 py-2 flex gap-1 overflow-x-auto">
+        <div className="md:hidden border-t border-slate-100 px-4 py-2 flex gap-1 overflow-x-auto">
           {navLinks.map(({ to, label }) => (
             <Link key={to} to={to}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition ${
-                isActive(to) ? 'bg-white/15 text-white' : 'text-slate-400 hover:bg-white/10 hover:text-white'
+                isActive(to) ? 'bg-indigo-50 text-indigo-600' : 'text-slate-600 hover:bg-slate-50'
               }`}
             >
               {label}
