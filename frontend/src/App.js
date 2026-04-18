@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import React, { useEffect, useRef, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -41,12 +41,39 @@ const AdminRoute = ({ children }) => {
   return user && user.role === 'admin' ? children : <Navigate to="/" />;
 };
 
+const PageTransition = ({ children }) => {
+  const location = useLocation();
+  const [visible, setVisible] = useState(true);
+  const prevKey = useRef(location.key);
+
+  useEffect(() => {
+    if (prevKey.current !== location.key) {
+      prevKey.current = location.key;
+      setVisible(false);
+      const t = setTimeout(() => setVisible(true), 50);
+      return () => clearTimeout(t);
+    }
+  }, [location.key]);
+
+  return (
+    <div
+      style={{
+        opacity: visible ? 1 : 0,
+        transition: visible ? 'opacity 2s ease' : 'none',
+      }}
+    >
+      {children}
+    </div>
+  );
+};
+
 function App() {
   return (
     <AuthProvider>
       <Router>
         <div className="min-h-screen bg-slate-50 flex flex-col">
           <Navbar />
+          <PageTransition>
           <div className="flex-grow">
             <Routes>
               <Route path="/" element={<Home />} />
@@ -66,6 +93,7 @@ function App() {
               <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
             </Routes>
           </div>
+          </PageTransition>
           <Footer />
         </div>
         <ToastContainer position="top-right" autoClose={3000} />
