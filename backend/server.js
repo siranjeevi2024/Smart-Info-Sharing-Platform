@@ -132,6 +132,7 @@ app.use('/api/admin', require('./routes/admin'));
 app.use('/api/messages', require('./routes/messages'));
 app.use('/api/users', require('./routes/users'));
 app.use('/api/ai', aiLimiter, require('./routes/ai'));
+app.use('/api/news', require('./routes/news'));
 
 // Socket.io
 io.on('connection', (socket) => {

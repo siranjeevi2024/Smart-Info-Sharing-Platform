@@ -21,6 +21,7 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import Trending from './pages/Trending';
 import UserProfile from './pages/UserProfile';
+import News from './pages/News';
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -57,6 +58,7 @@ function App() {
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password/:token" element={<ResetPassword />} />
               <Route path="/trending" element={<Trending />} />
+              <Route path="/news" element={<News />} />
               <Route path="/post/:id" element={<PostDetail />} />
               <Route path="/auth/success" element={<AuthSuccess />} />
               <Route path="/create" element={<PrivateRoute><CreatePost /></PrivateRoute>} />
