@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -43,9 +44,10 @@ const AdminRoute = ({ children }) => {
 
 function App() {
   return (
+    <ThemeProvider>
     <AuthProvider>
       <Router>
-        <div className="min-h-screen bg-slate-50 flex flex-col">
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col">
           <Navbar />
           <div className="flex-grow">
             <Routes>
@@ -71,6 +73,7 @@ function App() {
         <ToastContainer position="top-right" autoClose={3000} />
       </Router>
     </AuthProvider>
+    </ThemeProvider>
   );
 }
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 
 const Icons = {
   Home: () => (
@@ -60,6 +61,7 @@ const navLinks = [
 
 const Navbar = () => {
   const { user, logout } = useAuth();
+  const { dark, toggle } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -73,7 +75,7 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="bg-white border-b border-slate-100 sticky top-0 z-50 shadow-sm">
+    <nav className="bg-white border-b border-slate-100 sticky top-0 z-50 shadow-sm dark:bg-slate-900 dark:border-slate-700">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
 
@@ -110,6 +112,22 @@ const Navbar = () => {
 
           {/* Right Side */}
           <div className="flex items-center gap-3">
+            {/* Dark/Light toggle */}
+            <button
+              onClick={toggle}
+              className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-slate-600 transition hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+              aria-label="Toggle theme"
+            >
+              {dark ? (
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M17.657 17.657l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
+                </svg>
+              ) : (
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                </svg>
+              )}
+            </button>
             {user ? (
               <div className="relative group">
                 <button className="flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-slate-50 transition-all duration-150 border border-transparent hover:border-slate-200">
