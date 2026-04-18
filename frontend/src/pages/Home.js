@@ -104,6 +104,43 @@ const InfoBanner = () => {
           />
         ))}
       </div>
+
+      {/* Ticker */}
+      <div className="mt-3 bg-slate-900 rounded-xl overflow-hidden">
+        <div className="flex items-center">
+          <div className="flex-shrink-0 bg-indigo-600 px-4 py-2.5 text-white text-xs font-bold uppercase tracking-wider">
+            Live
+          </div>
+          <div className="overflow-hidden flex-1 py-2.5">
+            <div className="flex gap-12 animate-marquee whitespace-nowrap">
+              {[
+                '🚀 10,000+ users sharing knowledge daily',
+                '🔥 50,000+ posts published this month',
+                '💬 Real-time messaging now available',
+                '🤖 AI Writing Assistant — try it on your next post',
+                '📚 New posts in Technology, Science & Business',
+                '🏆 Weekly top contributors featured on Trending',
+                '🌍 Connect with users from around the world',
+                '✨ Create your first post and get noticed',
+              ].concat([
+                '🚀 10,000+ users sharing knowledge daily',
+                '🔥 50,000+ posts published this month',
+                '💬 Real-time messaging now available',
+                '🤖 AI Writing Assistant — try it on your next post',
+                '📚 New posts in Technology, Science & Business',
+                '🏆 Weekly top contributors featured on Trending',
+                '🌍 Connect with users from around the world',
+                '✨ Create your first post and get noticed',
+              ]).map((item, i) => (
+                <span key={i} className="text-slate-300 text-xs font-medium">
+                  {item}
+                  <span className="mx-6 text-slate-600">•</span>
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
