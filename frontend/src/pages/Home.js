@@ -42,38 +42,33 @@ const InfoBanner = () => {
   }, [current]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const item = infoBannerItems[current];
+  const nextItem = infoBannerItems[(current + 1) % infoBannerItems.length];
+  const prevItem = infoBannerItems[(current - 1 + infoBannerItems.length) % infoBannerItems.length];
+  const incomingItem = direction === 'next' ? nextItem : prevItem;
 
   return (
     <div className="mb-6">
       {/* Card */}
-      <div className="relative rounded-2xl overflow-hidden bg-slate-900" style={{ height: '160px' }}>
+      <div className="relative rounded-2xl overflow-hidden" style={{ height: '160px' }}>
 
-        {/* Sliding content */}
+        {/* Outgoing slide */}
         <div
           className={`absolute inset-0 bg-gradient-to-br ${item.color} transition-all duration-700 ease-in-out`}
           style={{
             transform: sliding
               ? direction === 'next' ? 'translateX(-100%)' : 'translateX(100%)'
               : 'translateX(0)',
-            opacity: sliding ? 0 : 1,
           }}
         >
-          {/* BG circles */}
           <div className="absolute top-0 right-0 w-48 h-48 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/4" />
           <div className="absolute bottom-0 left-1/4 w-32 h-32 bg-white/10 rounded-full translate-y-1/2" />
-
           <div className="relative h-full flex items-center justify-between px-8">
-            {/* Icon */}
-            <div className="w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center text-5xl shadow-inner backdrop-blur-sm flex-shrink-0">
-              {item.icon}
-            </div>
-            {/* Text */}
+            <div className="w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center text-5xl shadow-inner backdrop-blur-sm flex-shrink-0">{item.icon}</div>
             <div className="flex-1 px-6">
               <p className="text-white/70 text-xs font-semibold uppercase tracking-widest mb-1">Smart Info Platform</p>
               <h3 className="text-white text-2xl font-extrabold mb-1">{item.title}</h3>
               <p className="text-white/90 text-sm leading-relaxed">{item.text}</p>
             </div>
-            {/* Stat */}
             <div className="flex-shrink-0 text-center">
               <div className="bg-white/20 backdrop-blur-sm rounded-2xl px-5 py-3 border border-white/30">
                 <p className="text-white text-xl font-black">{item.stat}</p>
@@ -82,6 +77,31 @@ const InfoBanner = () => {
             </div>
           </div>
         </div>
+
+        {/* Incoming slide */}
+        {sliding && (
+          <div
+            className={`absolute inset-0 bg-gradient-to-br ${incomingItem.color} transition-all duration-700 ease-in-out`}
+            style={{ transform: direction === 'next' ? 'translateX(100%)' : 'translateX(-100%)', animation: 'slideIn 0.7s ease-in-out forwards' }}
+          >
+            <div className="absolute top-0 right-0 w-48 h-48 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/4" />
+            <div className="absolute bottom-0 left-1/4 w-32 h-32 bg-white/10 rounded-full translate-y-1/2" />
+            <div className="relative h-full flex items-center justify-between px-8">
+              <div className="w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center text-5xl shadow-inner backdrop-blur-sm flex-shrink-0">{incomingItem.icon}</div>
+              <div className="flex-1 px-6">
+                <p className="text-white/70 text-xs font-semibold uppercase tracking-widest mb-1">Smart Info Platform</p>
+                <h3 className="text-white text-2xl font-extrabold mb-1">{incomingItem.title}</h3>
+                <p className="text-white/90 text-sm leading-relaxed">{incomingItem.text}</p>
+              </div>
+              <div className="flex-shrink-0 text-center">
+                <div className="bg-white/20 backdrop-blur-sm rounded-2xl px-5 py-3 border border-white/30">
+                  <p className="text-white text-xl font-black">{incomingItem.stat}</p>
+                  <p className="text-white/70 text-xs mt-0.5">and growing</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Arrows */}
         <button onClick={prev} className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/30 hover:bg-black/50 rounded-full flex items-center justify-center text-white transition z-10 backdrop-blur-sm">
