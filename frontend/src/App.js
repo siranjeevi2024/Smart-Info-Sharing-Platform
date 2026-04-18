@@ -57,6 +57,7 @@ const PageTransition = ({ children }) => {
 
   return (
     <div
+      className="flex-grow flex flex-col"
       style={{
         opacity: visible ? 1 : 0,
         transition: visible ? 'opacity 2s ease' : 'none',
@@ -74,7 +75,7 @@ function App() {
         <div className="min-h-screen bg-slate-50 flex flex-col">
           <Navbar />
           <PageTransition>
-          <div className="flex-grow">
+          <div className="flex-grow flex flex-col">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
