@@ -379,7 +379,7 @@ const Home = () => {
               </div>
             ) : (
               <div className="card p-14 text-center">
-                <div className="mb-4 text-5xl">?</div>
+                <div className="mb-4 text-5xl">🔍</div>
                 <h3 className="mb-2 text-lg font-semibold text-slate-700">No posts found</h3>
                 <p className="mb-5 text-slate-400">
                   {search || category ? `No results for "${search}" ${category ? `in ${category}` : ''}` : 'Be the first to post.'}
@@ -397,20 +397,20 @@ const Home = () => {
             <div className="sticky top-24 space-y-5">
               <div className="card p-5">
                 <h3 className="mb-4 flex items-center gap-2 font-bold text-slate-800">
-                  <span className="rounded-lg bg-indigo-50 px-2 py-1 text-xs font-bold text-indigo-600">Quick</span>
+                  <span className="text-lg">⚡</span>
                   Quick Actions
                 </h3>
                 <div className="space-y-2">
                   <Link to="/create" className="flex items-center gap-3 rounded-xl p-3 transition hover:bg-indigo-50 hover:text-indigo-700">
-                    <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-100 text-xs font-bold text-indigo-700">NEW</span>
+                    <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-100 text-lg">✏️</span>
                     <span className="text-sm font-medium text-slate-700">Create Post</span>
                   </Link>
                   <Link to="/saved" className="flex items-center gap-3 rounded-xl p-3 transition hover:bg-amber-50 hover:text-amber-700">
-                    <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 text-xs font-bold text-amber-700">SAVE</span>
+                    <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 text-lg">🔖</span>
                     <span className="text-sm font-medium text-slate-700">Saved Posts</span>
                   </Link>
                   <Link to="/messages" className="flex items-center gap-3 rounded-xl p-3 transition hover:bg-emerald-50 hover:text-emerald-700">
-                    <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100 text-xs font-bold text-emerald-700">CHAT</span>
+                    <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100 text-lg">💬</span>
                     <span className="text-sm font-medium text-slate-700">Messages</span>
                   </Link>
                 </div>
@@ -418,7 +418,7 @@ const Home = () => {
 
               <div className="card p-5">
                 <h3 className="mb-4 flex items-center gap-2 font-bold text-slate-800">
-                  <span className="rounded-lg bg-rose-50 px-2 py-1 text-xs font-bold text-rose-600">Hot</span>
+                  <span className="text-lg">🔥</span>
                   Trending Now
                 </h3>
                 <div className="space-y-3">
@@ -431,8 +431,8 @@ const Home = () => {
                             {post.title}
                           </p>
                           <div className="mt-1 flex gap-2 text-xs text-slate-400">
-                            <span>{post.views} views</span>
-                            <span>{post.likes?.length || 0} likes</span>
+                            <span>👁 {post.views}</span>
+                            <span>❤️ {post.likes?.length || 0}</span>
                           </div>
                         </div>
                       </Link>
