@@ -425,7 +425,7 @@ const Home = () => {
                   {trendingPosts.length > 0 ? (
                     trendingPosts.map((post, index) => (
                       <Link key={post._id} to={`/post/${post._id}`} className="flex gap-3 group">
-                        <span className="w-6 flex-shrink-0 text-lg font-black text-slate-200">#{index + 1}</span>
+                        <span className="w-6 flex-shrink-0 text-lg font-black text-slate-700">#{index + 1}</span>
                         <div className="min-w-0 flex-1">
                           <p className="line-clamp-2 text-sm font-semibold leading-snug text-slate-700 transition group-hover:text-indigo-600">
                             {post.title}
