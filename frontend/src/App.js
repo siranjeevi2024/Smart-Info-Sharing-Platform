@@ -37,8 +37,13 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-        <div className="min-h-screen bg-gray-50 flex flex-col">
-          <Navbar />
+        <div className="min-h-screen flex flex-col relative">
+          {/* Background Orbs */}
+          <div className="bg-orb bg-orb-1" />
+          <div className="bg-orb bg-orb-2" />
+          <div className="bg-orb bg-orb-3" />
+          <div className="relative z-10 flex flex-col min-h-screen">
+            <Navbar />
           <div className="flex-grow">
             <Routes>
             <Route path="/" element={<Home />} />
@@ -73,8 +78,10 @@ function App() {
             } />
             </Routes>
           </div>
+          </div>
           <Footer />
-          <ToastContainer position="top-right" autoClose={3000} />
+          <ToastContainer position="top-right" autoClose={3000} theme="dark" />
+        </div>
         </div>
       </Router>
     </AuthProvider>

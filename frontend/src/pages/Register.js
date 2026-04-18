@@ -26,20 +26,20 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md animate-slide-up">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-14 h-14 bg-indigo-600 rounded-2xl mb-4 shadow-lg">
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-4 shadow-lg" style={{ background: 'linear-gradient(135deg, #667eea, #764ba2)' }}>
             <span className="text-2xl font-black text-white">S</span>
           </div>
-          <h1 className="text-3xl font-bold text-slate-800">Create account</h1>
-          <p className="text-slate-500 mt-1">Join thousands of knowledge sharers</p>
+          <h1 className="text-3xl font-bold text-white">Create account</h1>
+          <p className="text-slate-400 mt-1">Join thousands of knowledge sharers</p>
         </div>
 
         <div className="card p-8">
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-1.5">Username</label>
+              <label className="block text-sm font-semibold text-slate-300 mb-1.5">Username</label>
               <input
                 type="text"
                 required
@@ -51,7 +51,7 @@ const Register = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-1.5">Email address</label>
+              <label className="block text-sm font-semibold text-slate-300 mb-1.5">Email address</label>
               <input
                 type="email"
                 required
@@ -63,7 +63,7 @@ const Register = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-1.5">Password</label>
+              <label className="block text-sm font-semibold text-slate-300 mb-1.5">Password</label>
               <input
                 type="password"
                 required
@@ -82,14 +82,14 @@ const Register = () => {
             </button>
           </form>
 
-          <p className="text-xs text-slate-400 text-center mt-4">
+          <p className="text-xs text-slate-500 text-center mt-4">
             By registering, you agree to our Terms of Service and Privacy Policy.
           </p>
         </div>
 
-        <p className="text-center mt-6 text-sm text-slate-500">
+        <p className="text-center mt-6 text-sm text-slate-400">
           Already have an account?{' '}
-          <Link to="/login" className="text-indigo-600 font-semibold hover:text-indigo-700">
+          <Link to="/login" className="text-purple-400 font-semibold hover:text-purple-300">
             Sign in
           </Link>
         </p>
