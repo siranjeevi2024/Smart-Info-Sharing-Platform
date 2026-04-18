@@ -310,7 +310,6 @@ const Home = () => {
           <div>
             <p className="text-sm text-slate-300">Main page</p>
             <h1 className="text-2xl font-bold sm:text-3xl">Home feed for {user.username}</h1>
-            <p className="mt-1 text-sm text-slate-300">Now with a Flipkart-style sliding banner at the top.</p>
           </div>
           <Link
             to="/create"
