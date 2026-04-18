@@ -103,12 +103,8 @@ const InfoBanner = () => {
 
       {/* Black ticker below */}
       <div className="mt-2 bg-slate-900 rounded-xl overflow-hidden">
-        <div className="flex items-center">
-          <div className="flex-shrink-0 bg-red-600 px-4 py-2 text-white text-xs font-bold uppercase tracking-wider">
-            Live
-          </div>
-          <div className="overflow-hidden flex-1 py-2">
-            <div className="flex gap-12 animate-marquee whitespace-nowrap">
+        <div className="overflow-hidden py-2 px-4">
+          <div className="flex gap-12 animate-marquee whitespace-nowrap">
               {[
                 '🚀 10,000+ users sharing knowledge daily',
                 '🔥 50,000+ posts published this month',
@@ -133,7 +129,6 @@ const InfoBanner = () => {
                   <span className="mx-6 text-slate-600">•</span>
                 </span>
               ))}
-            </div>
           </div>
         </div>
       </div>
