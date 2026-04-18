@@ -147,29 +147,19 @@ const HeroCarousel = ({ username }) => {
     return clearTimers;
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const handleMouseEnter = () => {
-    clearTimers();
-  };
-
-  const handleMouseLeave = () => {
-    startSlide(current);
-  };
+  const goTo = (index) => startSlide(index);
 
   const activeSlide = heroSlides[current];
 
   return (
-    <div
-      className="relative mb-6 overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-slate-200"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
+    <div className="relative mb-6 overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-slate-200">
       {/* Slides — fade crossfade like Flipkart */}
-      <div className="relative" style={{ minHeight: '360px' }}>
+      <div className="relative" style={{ minHeight: '420px' }}>
         <section
           key={activeSlide.title}
           className={`bg-gradient-to-r ${activeSlide.accent} animate-fade-in p-5 sm:p-8`}
         >
-          <div className="grid items-center gap-6 lg:grid-cols-[1fr_0.95fr]">
+          <div className="grid items-center gap-6 lg:grid-cols-[0.95fr_1.05fr]">
             <div>
               <p className="mb-3 inline-flex rounded-full bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-white/90">
                 {activeSlide.tag}
@@ -196,14 +186,18 @@ const HeroCarousel = ({ username }) => {
 
             <div className="rounded-3xl border border-white/20 bg-white/12 p-4">
               <div className="overflow-hidden rounded-2xl bg-white/95 p-3 text-slate-800 shadow-lg">
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
                   {activeSlide.images.map((image, index) => (
-                    <img
+                    <div
                       key={`${activeSlide.title}-${index}`}
-                      src={image}
-                      alt={`${activeSlide.title} preview ${index + 1}`}
-                      className="h-20 w-full rounded-xl object-cover"
-                    />
+                      className="overflow-hidden rounded-xl bg-slate-100 shadow-sm"
+                    >
+                      <img
+                        src={image}
+                        alt={`${activeSlide.title} preview ${index + 1}`}
+                        className="h-24 w-full object-cover sm:h-20"
+                      />
+                    </div>
                   ))}
                 </div>
                 <div className="mt-3">
@@ -222,6 +216,20 @@ const HeroCarousel = ({ username }) => {
             </div>
           </div>
         </section>
+      </div>
+
+      <div className="relative z-20 flex justify-center gap-2 py-3">
+        {heroSlides.map((slide, index) => (
+          <button
+            key={slide.title}
+            type="button"
+            onClick={() => goTo(index)}
+            className={`rounded-full transition-all duration-300 ${
+              current === index ? 'h-2 w-6 bg-white' : 'h-2 w-2 bg-white/50 hover:bg-white/75'
+            }`}
+            aria-label={`Go to slide ${index + 1}`}
+          />
+        ))}
       </div>
     </div>
   );
