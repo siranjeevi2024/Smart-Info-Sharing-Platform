@@ -298,17 +298,45 @@ const Home = () => {
   return (
     <div className="page-container">
       <div className="container mx-auto px-4">
-        <div className="mb-6 flex items-center justify-between gap-4 rounded-3xl bg-gradient-to-r from-slate-900 to-slate-800 p-6 text-white shadow-lg">
-          <div>
-            <p className="text-sm text-slate-300">Main page</p>
-            <h1 className="text-2xl font-bold sm:text-3xl">Home feed for {user.username}</h1>
+        <div className="mb-6 overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 shadow-xl">
+          <div className="flex items-center justify-between gap-4 p-6">
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                <div className="h-14 w-14 rounded-2xl bg-white/20 flex items-center justify-center text-2xl font-black text-white shadow-lg ring-2 ring-white/30">
+                  {user.avatar
+                    ? <img src={user.avatar} alt={user.username} className="h-14 w-14 rounded-2xl object-cover" />
+                    : user.username[0].toUpperCase()}
+                </div>
+                <span className="absolute -bottom-1 -right-1 h-4 w-4 rounded-full bg-emerald-400 ring-2 ring-white" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-white/70">
+                  {new Date().getHours() < 12 ? '☀️ Good morning' : new Date().getHours() < 17 ? '👋 Good afternoon' : '🌙 Good evening'}
+                </p>
+                <h1 className="text-xl font-extrabold text-white sm:text-2xl">{user.username}</h1>
+                <p className="mt-0.5 text-xs text-white/60">Welcome back to your feed</p>
+              </div>
+            </div>
+            <div className="hidden items-center gap-3 md:flex">
+              <div className="rounded-2xl bg-white/10 px-4 py-3 text-center backdrop-blur-sm">
+                <p className="text-lg font-black text-white">{posts.length}</p>
+                <p className="text-[11px] font-medium text-white/60">Posts</p>
+              </div>
+              <div className="rounded-2xl bg-white/10 px-4 py-3 text-center backdrop-blur-sm">
+                <p className="text-lg font-black text-white">{trendingPosts.length}</p>
+                <p className="text-[11px] font-medium text-white/60">Trending</p>
+              </div>
+              <Link
+                to="/create"
+                className="rounded-xl bg-white px-5 py-3 text-sm font-bold text-indigo-700 transition hover:-translate-y-0.5 hover:shadow-lg"
+              >
+                + Create Post
+              </Link>
+            </div>
           </div>
-          <Link
-            to="/create"
-            className="hidden rounded-xl bg-white px-5 py-3 text-sm font-bold text-slate-900 transition hover:-translate-y-0.5 hover:shadow-lg md:inline-flex"
-          >
-            Create Post
-          </Link>
+          <div className="flex gap-4 border-t border-white/10 px-6 py-3">
+            <span className="text-xs text-white/50">🔥 {trendingPosts[0]?.title || 'No trending posts yet'}</span>
+          </div>
         </div>
 
         <div className="flex gap-6">
