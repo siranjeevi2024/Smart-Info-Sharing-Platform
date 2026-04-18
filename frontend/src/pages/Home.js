@@ -77,32 +77,15 @@ const SLIDE_DURATION = 4000;
 
 const HeroCarousel = ({ username }) => {
   const [current, setCurrent] = useState(0);
-  const [progress, setProgress] = useState(0);
-  const [paused, setPaused] = useState(false); // v2
   const intervalRef = useRef(null);
-  const progressRef = useRef(null);
-  const startTimeRef = useRef(null);
 
   const clearTimers = () => {
-    clearInterval(intervalRef.current);
-    cancelAnimationFrame(progressRef.current);
+    clearTimeout(intervalRef.current);
   };
 
   const startSlide = (index = null) => {
     clearTimers();
     if (index !== null) setCurrent(index);
-    setProgress(0);
-    startTimeRef.current = performance.now();
-
-    const tick = (now) => {
-      const elapsed = now - startTimeRef.current;
-      const pct = Math.min((elapsed / SLIDE_DURATION) * 100, 100);
-      setProgress(pct);
-      if (pct < 100) {
-        progressRef.current = requestAnimationFrame(tick);
-      }
-    };
-    progressRef.current = requestAnimationFrame(tick);
 
     intervalRef.current = setTimeout(() => {
       setCurrent((prev) => (prev + 1) % heroSlides.length);
@@ -120,14 +103,14 @@ const HeroCarousel = ({ username }) => {
   const goNext = () => startSlide((current + 1) % heroSlides.length);
 
   const handleMouseEnter = () => {
-    setPaused(true);
     clearTimers();
   };
 
   const handleMouseLeave = () => {
-    setPaused(false);
     startSlide(current);
   };
+
+  const activeSlide = heroSlides[current];
 
   return (
     <div
@@ -137,59 +120,55 @@ const HeroCarousel = ({ username }) => {
     >
       {/* Slides — fade crossfade like Flipkart */}
       <div className="relative" style={{ minHeight: '260px' }}>
-        {heroSlides.map((slide, index) => (
-          <section
-            key={slide.title}
-            className={`absolute inset-0 bg-gradient-to-r ${slide.accent} p-5 sm:p-8 transition-opacity duration-500 ${
-              index === current ? 'opacity-100 z-10' : 'opacity-0 z-0'
-            }`}
-          >
-            <div className="grid items-center gap-6 lg:grid-cols-[1.4fr_0.7fr]">
-              <div>
-                <p className="mb-3 inline-flex rounded-full bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-white/90">
-                  {slide.tag}
-                </p>
-                <p className="mb-2 text-sm font-medium text-white/80">Welcome back, {username}</p>
-                <h2 className="max-w-2xl text-2xl font-extrabold leading-tight text-white sm:text-4xl">
-                  {slide.title}
-                </h2>
-                <p className="mt-3 max-w-2xl text-sm leading-6 text-white/85 sm:text-base">
-                  {slide.description}
-                </p>
-                <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                  <Link
-                    to={slide.link}
-                    className="inline-flex items-center justify-center rounded-xl bg-white px-5 py-3 text-sm font-bold text-slate-900 transition hover:-translate-y-0.5 hover:shadow-lg"
-                  >
-                    {slide.cta}
-                  </Link>
-                  <div className="inline-flex items-center justify-center rounded-xl border border-white/25 bg-white/10 px-5 py-3 text-sm font-semibold text-white">
-                    Smart Info Platform
-                  </div>
+        <section
+          key={activeSlide.title}
+          className={`bg-gradient-to-r ${activeSlide.accent} animate-fade-in p-5 sm:p-8`}
+        >
+          <div className="grid items-center gap-6 lg:grid-cols-[1.4fr_0.7fr]">
+            <div>
+              <p className="mb-3 inline-flex rounded-full bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-white/90">
+                {activeSlide.tag}
+              </p>
+              <p className="mb-2 text-sm font-medium text-white/80">Welcome back, {username}</p>
+              <h2 className="max-w-2xl text-2xl font-extrabold leading-tight text-white sm:text-4xl">
+                {activeSlide.title}
+              </h2>
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-white/85 sm:text-base">
+                {activeSlide.description}
+              </p>
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+                <Link
+                  to={activeSlide.link}
+                  className="inline-flex items-center justify-center rounded-xl bg-white px-5 py-3 text-sm font-bold text-slate-900 transition hover:-translate-y-0.5 hover:shadow-lg"
+                >
+                  {activeSlide.cta}
+                </Link>
+                <div className="inline-flex items-center justify-center rounded-xl border border-white/25 bg-white/10 px-5 py-3 text-sm font-semibold text-white">
+                  Smart Info Platform
                 </div>
               </div>
+            </div>
 
-              <div className="rounded-3xl border border-white/20 bg-white/12 p-5">
-                <div className="rounded-2xl bg-white/95 p-5 text-slate-800">
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-                    {slide.statLabel}
-                  </p>
-                  <p className="mt-2 text-4xl font-black text-slate-900">{slide.statValue}</p>
-                  <div className="mt-5 grid grid-cols-2 gap-3">
-                    <div className="rounded-2xl bg-slate-50 p-3">
-                      <p className="text-xs text-slate-400">Fast discovery</p>
-                      <p className="mt-1 text-sm font-bold text-slate-700">Clean feed filters</p>
-                    </div>
-                    <div className="rounded-2xl bg-slate-50 p-3">
-                      <p className="text-xs text-slate-400">Better engagement</p>
-                      <p className="mt-1 text-sm font-bold text-slate-700">Real-time updates</p>
-                    </div>
+            <div className="rounded-3xl border border-white/20 bg-white/12 p-5">
+              <div className="rounded-2xl bg-white/95 p-5 text-slate-800">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                  {activeSlide.statLabel}
+                </p>
+                <p className="mt-2 text-4xl font-black text-slate-900">{activeSlide.statValue}</p>
+                <div className="mt-5 grid grid-cols-2 gap-3">
+                  <div className="rounded-2xl bg-slate-50 p-3">
+                    <p className="text-xs text-slate-400">Fast discovery</p>
+                    <p className="mt-1 text-sm font-bold text-slate-700">Clean feed filters</p>
+                  </div>
+                  <div className="rounded-2xl bg-slate-50 p-3">
+                    <p className="text-xs text-slate-400">Better engagement</p>
+                    <p className="mt-1 text-sm font-bold text-slate-700">Real-time updates</p>
                   </div>
                 </div>
               </div>
             </div>
-          </section>
-        ))}
+          </div>
+        </section>
       </div>
 
       {/* Left arrow */}
