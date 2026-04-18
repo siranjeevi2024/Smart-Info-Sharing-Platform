@@ -216,27 +216,19 @@ const HeroCarousel = ({ username }) => {
         </svg>
       </button>
 
-      {/* Bottom bar: dots + progress */}
-      <div className="relative z-20 flex flex-col items-center gap-2 py-3">
-        <div className="flex items-center gap-2">
-          {heroSlides.map((slide, index) => (
-            <button
-              key={slide.title}
-              type="button"
-              onClick={() => goTo(index)}
-              className={`rounded-full transition-all duration-300 ${
-                current === index ? 'h-2.5 w-7 bg-indigo-600' : 'h-2 w-2 bg-slate-300 hover:bg-slate-400'
-              }`}
-              aria-label={`Go to slide ${index + 1}`}
-            />
-          ))}
-        </div>
-        <div className="h-0.5 w-24 overflow-hidden rounded-full bg-slate-200">
-          <div
-            className="h-full rounded-full bg-indigo-600 transition-none"
-            style={{ width: `${progress}%` }}
+      {/* Dots */}
+      <div className="relative z-20 flex justify-center gap-2 py-3">
+        {heroSlides.map((slide, index) => (
+          <button
+            key={slide.title}
+            type="button"
+            onClick={() => goTo(index)}
+            className={`rounded-full transition-all duration-300 ${
+              current === index ? 'h-2.5 w-7 bg-indigo-600' : 'h-2 w-2 bg-slate-300 hover:bg-slate-400'
+            }`}
+            aria-label={`Go to slide ${index + 1}`}
           />
-        </div>
+        ))}
       </div>
     </div>
   );
