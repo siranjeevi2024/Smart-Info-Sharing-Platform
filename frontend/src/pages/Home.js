@@ -42,13 +42,13 @@ const heroSlides = [
 ];
 
 const categories = [
-  { label: 'All', icon: 'All' },
-  { label: 'Technology', icon: 'Tech' },
-  { label: 'Science', icon: 'Sci' },
-  { label: 'Business', icon: 'Biz' },
-  { label: 'Education', icon: 'Edu' },
-  { label: 'Health', icon: 'Health' },
-  { label: 'Other', icon: 'More' }
+  { label: 'All', icon: '🌐' },
+  { label: 'Technology', icon: '💻' },
+  { label: 'Science', icon: '🔬' },
+  { label: 'Business', icon: '📈' },
+  { label: 'Education', icon: '📚' },
+  { label: 'Health', icon: '❤️' },
+  { label: 'Other', icon: '✨' },
 ];
 
 const SkeletonCard = () => (
@@ -359,7 +359,7 @@ const Home = () => {
                       : 'border border-slate-200 bg-white text-slate-600 hover:border-indigo-300 hover:text-indigo-600'
                   }`}
                 >
-                  <span className="text-[11px] font-bold uppercase tracking-[0.16em]">{icon}</span>
+                  <span className="text-base">{icon}</span>
                   {label}
                 </button>
               ))}
