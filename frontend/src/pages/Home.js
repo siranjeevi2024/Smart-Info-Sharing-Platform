@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import API from '../utils/api';
@@ -7,6 +7,65 @@ import { toast } from 'react-toastify';
 import { useAuth } from '../context/AuthContext';
 import Landing from './Landing';
 import { API_URL } from '../utils/config';
+
+const infoBannerItems = [
+  { icon: '🚀', text: 'Share your knowledge and grow with the community', color: 'from-indigo-500 to-purple-600' },
+  { icon: '🔥', text: 'Trending posts updated every hour — stay ahead!', color: 'from-orange-500 to-red-500' },
+  { icon: '💬', text: 'Real-time messaging — connect with anyone instantly', color: 'from-green-500 to-teal-500' },
+  { icon: '🤖', text: 'AI Writing Assistant available on every post — try it!', color: 'from-violet-500 to-indigo-500' },
+  { icon: '📚', text: 'Explore 6 categories: Tech, Science, Business & more', color: 'from-blue-500 to-cyan-500' },
+  { icon: '🏆', text: 'Top contributors get featured on the Trending page', color: 'from-amber-500 to-orange-500' },
+];
+
+const InfoBanner = () => {
+  const [current, setCurrent] = useState(0);
+  const [animating, setAnimating] = useState(false);
+  const intervalRef = useRef(null);
+
+  const goTo = (index) => {
+    setAnimating(true);
+    setTimeout(() => {
+      setCurrent(index);
+      setAnimating(false);
+    }, 300);
+  };
+
+  useEffect(() => {
+    intervalRef.current = setInterval(() => {
+      setAnimating(true);
+      setTimeout(() => {
+        setCurrent(prev => (prev + 1) % infoBannerItems.length);
+        setAnimating(false);
+      }, 300);
+    }, 2000);
+    return () => clearInterval(intervalRef.current);
+  }, []);
+
+  const item = infoBannerItems[current];
+
+  return (
+    <div className={`bg-gradient-to-r ${item.color} rounded-2xl px-5 py-3 mb-6 transition-all duration-300`}>
+      <div className="flex items-center justify-between gap-4">
+        <div className={`flex items-center gap-3 transition-all duration-300 ${animating ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'}`}>
+          <span className="text-2xl">{item.icon}</span>
+          <p className="text-white text-sm font-medium">{item.text}</p>
+        </div>
+        {/* Dots */}
+        <div className="flex items-center gap-1.5 flex-shrink-0">
+          {infoBannerItems.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => goTo(i)}
+              className={`rounded-full transition-all duration-300 ${
+                i === current ? 'w-4 h-2 bg-white' : 'w-2 h-2 bg-white/40 hover:bg-white/70'
+              }`}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const categories = [
   { label: 'All', icon: '🌐' },
@@ -112,6 +171,9 @@ const Home = () => {
         <div className="flex gap-6">
           {/* Main */}
           <div className="flex-1 min-w-0">
+            {/* Info Banner */}
+            <InfoBanner />
+
             {/* Search & Sort */}
             <div className="card p-4 mb-5">
               <div className="flex gap-3">
