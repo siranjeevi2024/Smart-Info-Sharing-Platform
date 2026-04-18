@@ -34,7 +34,13 @@ const PostCard = ({ post }) => {
   };
 
   return (
-    <div className="card flex flex-col animate-fade-in">
+    <div className="card flex flex-col animate-fade-in overflow-hidden">
+      {/* Cover Image */}
+      {post.image && (
+        <Link to={`/post/${post._id}`}>
+          <img src={post.image} alt={post.title} className="w-full h-44 object-cover hover:opacity-95 transition" />
+        </Link>
+      )}
       <div className="p-5 flex flex-col flex-1">
         {/* Header */}
         <div className="flex items-center justify-between mb-4">

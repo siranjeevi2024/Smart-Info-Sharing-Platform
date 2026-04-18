@@ -136,6 +136,13 @@ const PostDetail = () => {
             </div>
           )}
 
+          {/* Cover Image */}
+          {post.image && (
+            <div className="rounded-2xl overflow-hidden mb-6">
+              <img src={post.image} alt={post.title} className="w-full max-h-96 object-cover" />
+            </div>
+          )}
+
           {/* Content */}
           <div className="prose prose-slate max-w-none mb-8">
             <p className="text-slate-700 text-base leading-relaxed whitespace-pre-wrap">{post.description}</p>

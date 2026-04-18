@@ -3,13 +3,14 @@ const Notification = require('../models/Notification');
 
 exports.createPost = async (req, res) => {
   try {
-    const { title, description, category, tags } = req.body;
+    const { title, description, category, tags, image } = req.body;
     
     const post = await Post.create({
       title,
       description,
       category,
       tags: tags || [],
+      image: image || null,
       createdBy: req.user._id
     });
 
@@ -96,6 +97,7 @@ exports.updatePost = async (req, res) => {
     post.description = description || post.description;
     post.category = category || post.category;
     post.tags = tags || post.tags;
+    post.image = image !== undefined ? image : post.image;
 
     await post.save();
 
