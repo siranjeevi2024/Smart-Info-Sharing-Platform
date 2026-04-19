@@ -10,7 +10,9 @@ async function cricFetch(endpoint, params = {}) {
   Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
   const res = await fetch(url.toString());
   if (!res.ok) throw new Error(`CricAPI error: ${res.status}`);
-  return res.json();
+  const json = await res.json();
+  if (json.status === 'failure') throw new Error(json.reason || 'CricAPI request failed');
+  return json;
 }
 
 // GET /api/cricket/matches?status=live|upcoming|recent

@@ -292,29 +292,32 @@ export default function Cricket() {
   const [players, setPlayers] = useState([]);
   const [series, setSeries] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const [search, setSearch] = useState('');
   const [selectedMatch, setSelectedMatch] = useState(null);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
 
   const fetchMatches = useCallback(async (status) => {
-    setLoading(true);
+    setLoading(true); setError('');
     try {
       const { data } = await axios.get(`${API}/cricket/matches?status=${status}`);
       setMatches(data?.data || []);
-    } catch {
+    } catch (err) {
       setMatches([]);
+      setError(err.response?.data?.error || 'Failed to load matches');
     } finally {
       setLoading(false);
     }
   }, []);
 
   const fetchSeries = useCallback(async () => {
-    setLoading(true);
+    setLoading(true); setError('');
     try {
       const { data } = await axios.get(`${API}/cricket/series`);
       setSeries(data?.data || []);
-    } catch {
+    } catch (err) {
       setSeries([]);
+      setError(err.response?.data?.error || 'Failed to load series');
     } finally {
       setLoading(false);
     }
@@ -322,12 +325,13 @@ export default function Cricket() {
 
   const searchPlayers = useCallback(async (q) => {
     if (!q.trim()) return;
-    setLoading(true);
+    setLoading(true); setError('');
     try {
       const { data } = await axios.get(`${API}/cricket/players?search=${encodeURIComponent(q)}`);
       setPlayers(data?.data || []);
-    } catch {
+    } catch (err) {
       setPlayers([]);
+      setError(err.response?.data?.error || 'Failed to search players');
     } finally {
       setLoading(false);
     }
@@ -336,7 +340,7 @@ export default function Cricket() {
   useEffect(() => {
     if (tab === 'live' || tab === 'upcoming' || tab === 'recent') fetchMatches(tab);
     if (tab === 'series') fetchSeries();
-    if (tab === 'players') setPlayers([]);
+    if (tab === 'players') { setPlayers([]); setError(''); }
   }, [tab, fetchMatches, fetchSeries]);
 
   const tabLabel = (t) => ({ live: '🔴 Live', upcoming: '📅 Upcoming', recent: '✅ Recent', players: '👤 Players', series: '🏆 Series' }[t]);
@@ -386,6 +390,20 @@ export default function Cricket() {
             >
               Search
             </button>
+          </div>
+        )}
+
+        {/* Error Banner */}
+        {error && (
+          <div className="mb-6 flex items-start gap-3 rounded-2xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 px-5 py-4 text-red-700 dark:text-red-400">
+            <span className="text-xl">⚠️</span>
+            <div>
+              <p className="font-semibold text-sm">API Error</p>
+              <p className="text-sm mt-0.5">{error}</p>
+              {/limit|exceeded/i.test(error) && (
+                <p className="text-xs mt-1 text-red-500">Your CricAPI free plan (100 hits/day) is exhausted. Resets at midnight UTC. <a href="https://cricapi.com" target="_blank" rel="noreferrer" className="underline font-semibold">Upgrade plan →</a></p>
+              )}
+            </div>
           </div>
         )}
 
