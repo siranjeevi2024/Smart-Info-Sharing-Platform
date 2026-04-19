@@ -5,7 +5,51 @@ const tabs = [
   { key: 'live', label: 'Live & Recent', icon: '🔴' },
   { key: 'upcoming', label: 'Upcoming', icon: '📅' },
   { key: 'players', label: 'Players', icon: '👤' },
+  { key: 'series', label: 'Series', icon: '🏆' },
 ];
+
+const Sidebar = ({ activeTab, onTabChange, onToggle }) => (
+  <div className="fixed inset-y-0 left-0 z-40 w-72 bg-gradient-to-b from-emerald-600 to-green-700 shadow-2xl backdrop-blur-xl border-r border-white/20 lg:translate-x-0 transition-transform duration-300 lg:static lg:translate-x-0">
+    {/* Header */}
+    <div className="p-6 border-b border-white/10">
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-black text-white flex items-center gap-2">
+          <span className="text-2xl">🏏</span>
+          Cricket Hub
+        </h2>
+        <button onClick={onToggle} className="lg:hidden p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    </div>
+    
+    {/* Menu */}
+    <nav className="p-4 space-y-1 mt-4">
+      {tabs.map((tab) => (
+        <button
+          key={tab.key}
+          onClick={() => onTabChange(tab.key)}
+          className={`w-full flex items-center gap-3 rounded-2xl p-3 text-left transition-all duration-200 group hover:bg-white/20 backdrop-blur-sm hover:scale-[1.02] hover:shadow-glow ${
+            activeTab === tab.key
+              ? 'bg-white/30 shadow-glow-lg border border-white/30'
+              : 'text-white/80 hover:text-white'
+          }`}
+        >
+          <span className={`text-xl flex-shrink-0 ${activeTab === tab.key ? 'text-yellow-300' : ''}`}>
+            {tab.icon}
+          </span>
+          <span className="font-semibold">{tab.label}</span>
+          {activeTab === tab.key && (
+            <div className="ml-auto w-2 h-2 bg-yellow-300 rounded-full animate-pulse" />
+          )}
+        </button>
+      ))}
+    </nav>
+  </div>
+);
+
 
 const matchTypeColors = {
   t20:  { bg: 'bg-violet-100 text-violet-700', border: 'border-violet-200' },
@@ -26,12 +70,18 @@ const SkeletonCard = () => (
   </div>
 );
 
-const MatchCard = ({ match }) => {
+const MatchCard = ({ match, onClick }) => {
   const isLive = match.matchStarted && !match.matchEnded;
   const typeStyle = matchTypeColors[match.matchType] || { bg: 'bg-slate-100 text-slate-600', border: '' };
 
   return (
-    <div className={`card overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${isLive ? 'ring-2 ring-red-400' : ''}`}>
+    <div 
+      className={`card overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl cursor-pointer ${isLive ? 'ring-2 ring-red-400' : ''}`}
+      onClick={() => onClick(match)}
+      role="button"
+      tabIndex={0}
+    >
+
       {/* Top bar */}
       <div className={`h-1 w-full ${isLive ? 'bg-red-500' : 'bg-slate-200'}`} />
 
@@ -283,11 +333,15 @@ const Cricket = () => {
   const [matches, setMatches] = useState([]);
   const [upcoming, setUpcoming] = useState([]);
   const [players, setPlayers] = useState([]);
+  const [series, setSeries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [playerSearch, setPlayerSearch] = useState('india');
   const [searchInput, setSearchInput] = useState('');
   const [selectedPlayer, setSelectedPlayer] = useState(null);
+  const [selectedMatch, setSelectedMatch] = useState(null);
+  const [showSidebar, setShowSidebar] = useState(false);
   const [filter, setFilter] = useState('all');
+
 
   const fetchMatches = useCallback(async () => {
     setLoading(true);
@@ -316,11 +370,21 @@ const Cricket = () => {
     finally { setLoading(false); }
   }, [playerSearch]);
 
+  const fetchSeries = useCallback(async () => {
+    setLoading(true);
+    try {
+      const { data } = await API.get('/cricket/series');
+      setSeries(data.data || []);
+    } catch { setSeries([]); }
+    finally { setLoading(false); }
+  }, []);
+
   useEffect(() => {
     if (activeTab === 'live') fetchMatches();
     else if (activeTab === 'upcoming') fetchUpcoming();
     else if (activeTab === 'players') fetchPlayers();
-  }, [activeTab, fetchMatches, fetchUpcoming, fetchPlayers]);
+    else if (activeTab === 'series') fetchSeries();
+  }, [activeTab, fetchMatches, fetchUpcoming, fetchPlayers, fetchSeries]);
 
   const handlePlayerSearch = (e) => {
     e.preventDefault();
@@ -333,7 +397,12 @@ const Cricket = () => {
 
   return (
     <div className="page-container">
-      <div className="container mx-auto px-4 max-w-7xl">
+      <div className="container mx-auto px-4 max-w-7xl lg:ml-72 xl:ml-80">
+
+</xai:function_call}
+
+<xai:function_call name="edit_file">
+<parameter name="path">mern-platform/frontend/src/pages/Cricket.js
 
         {/* Header */}
         <div className="mb-6 overflow-hidden rounded-3xl bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 p-6 shadow-xl">
@@ -356,24 +425,32 @@ const Cricket = () => {
           </div>
         </div>
 
-        {/* Tabs */}
-        <div className="mb-6 flex gap-2">
-          {tabs.map(tab => (
-            <button
-              key={tab.key}
-              onClick={() => setActiveTab(tab.key)}
-              className={`flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition-all active:scale-95 ${
-                activeTab === tab.key
-                  ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-md'
-                  : 'border border-slate-200 bg-white text-slate-600 hover:border-green-300 hover:text-green-600 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300'
-              }`}
-            >
-              {tab.icon} {tab.label}
-            </button>
-          ))}
-        </div>
+        {/* Sidebar Toggle Mobile */}
+        <button 
+          onClick={() => setShowSidebar(true)}
+          className="lg:hidden mb-6 flex items-center gap-2 rounded-xl bg-gradient-to-r from-green-600 to-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md hover:shadow-lg transition-all"
+        >
+          <span className="text-xl">🏏</span>
+          Menu
+        </button>
+
+        {/* Sidebar */}
+        <Sidebar 
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          onToggle={() => setShowSidebar(false)}
+        />
+
+        {/* Mobile Sidebar Backdrop */}
+        {showSidebar && (
+          <div 
+            className="fixed inset-0 z-30 bg-black/50 backdrop-blur-sm lg:hidden"
+            onClick={() => setShowSidebar(false)}
+          />
+        )}
 
         {/* Live & Recent */}
+
         {activeTab === 'live' && (
           loading ? (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -388,7 +465,7 @@ const Cricket = () => {
                     Live Matches ({liveMatches.length})
                   </h2>
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                    {liveMatches.map(m => <MatchCard key={m.id} match={m} />)}
+{liveMatches.map(m => <MatchCard key={m.id} match={m} onClick={setSelectedMatch} />)}
                   </div>
                 </div>
               )}
@@ -396,7 +473,7 @@ const Cricket = () => {
                 <div>
                   <h2 className="mb-3 font-bold text-slate-800 dark:text-slate-100">Recent Results ({recentMatches.length})</h2>
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                    {recentMatches.map(m => <MatchCard key={m.id} match={m} />)}
+{recentMatches.map(m => <MatchCard key={m.id} match={m} onClick={setSelectedMatch} />)}
                   </div>
                 </div>
               )}
@@ -430,7 +507,7 @@ const Cricket = () => {
               </div>
             ) : filteredUpcoming.length > 0 ? (
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {filteredUpcoming.map(m => <MatchCard key={m.id} match={m} />)}
+{filteredUpcoming.map(m => <MatchCard key={m.id} match={m} onClick={setSelectedMatch} />)}
               </div>
             ) : (
               <div className="card p-14 text-center">
@@ -483,3 +560,4 @@ const Cricket = () => {
 };
 
 export default Cricket;
+

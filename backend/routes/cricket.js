@@ -9,6 +9,16 @@ const cricFetch = async (endpoint) => {
   return res.json();
 };
 
+// Match detail
+router.get('/match/:id', async (req, res) => {
+  try {
+    const data = await cricFetch(`match_info?id=${req.params.id}`);
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Current / recent matches
 router.get('/matches', async (req, res) => {
   try {
@@ -44,6 +54,16 @@ router.get('/players', async (req, res) => {
 router.get('/player/:id', async (req, res) => {
   try {
     const data = await cricFetch(`players_info?id=${req.params.id}`);
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Scorecard
+router.get('/scorecard/:id', async (req, res) => {
+  try {
+    const data = await cricFetch(`match_scorecard?id=${req.params.id}`);
     res.json(data);
   } catch (err) {
     res.status(500).json({ error: err.message });
