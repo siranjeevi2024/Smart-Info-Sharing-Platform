@@ -3,7 +3,13 @@ import axios from 'axios';
 
 const API = process.env.REACT_APP_API_URL || 'http://localhost:5002/api';
 
-const TABS = ['live', 'upcoming', 'recent', 'players', 'series'];
+const SIDEBAR_ITEMS = [
+  { key: 'live',     label: 'Live',     emoji: '🔴' },
+  { key: 'upcoming', label: 'Upcoming', emoji: '📅' },
+  { key: 'recent',   label: 'Recent',   emoji: '✅' },
+  { key: 'players',  label: 'Players',  emoji: '👤' },
+  { key: 'series',   label: 'Series',   emoji: '🏆' },
+];
 
 const statusColor = (s = '') => {
   if (/live/i.test(s)) return 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400';
@@ -11,7 +17,7 @@ const statusColor = (s = '') => {
   return 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400';
 };
 
-function Skeleton({ rows = 4 }) {
+function Skeleton({ rows = 6 }) {
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {Array.from({ length: rows }).map((_, i) => (
@@ -55,12 +61,8 @@ function MatchCard({ match, onClick }) {
           </span>
         </div>
       </div>
-      {match.venue && (
-        <p className="mt-3 text-xs text-slate-400 truncate">📍 {match.venue}</p>
-      )}
-      {match.dateTimeGMT && (
-        <p className="text-xs text-slate-400 mt-1">🕐 {new Date(match.dateTimeGMT).toLocaleString()}</p>
-      )}
+      {match.venue && <p className="mt-3 text-xs text-slate-400 truncate">📍 {match.venue}</p>}
+      {match.dateTimeGMT && <p className="text-xs text-slate-400 mt-1">🕐 {new Date(match.dateTimeGMT).toLocaleString()}</p>}
     </div>
   );
 }
@@ -84,33 +86,23 @@ function MatchModal({ matchId, onClose }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" onClick={onClose}>
-      <div
-        className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto"
-        onClick={e => e.stopPropagation()}
-      >
+      <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between p-5 border-b border-slate-100 dark:border-slate-700">
           <h2 className="font-bold text-slate-800 dark:text-slate-100 text-lg">Match Details</h2>
           <button onClick={onClose} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-2xl leading-none">&times;</button>
         </div>
-
         <div className="p-5">
           {loading ? (
-            <div className="space-y-3">
-              {[1,2,3].map(i => <div key={i} className="h-4 bg-slate-200 dark:bg-slate-700 rounded animate-pulse" />)}
-            </div>
+            <div className="space-y-3">{[1,2,3].map(i => <div key={i} className="h-4 bg-slate-200 dark:bg-slate-700 rounded animate-pulse" />)}</div>
           ) : data ? (
             <>
               <div className="text-center mb-4">
                 <p className="text-xl font-bold text-slate-800 dark:text-slate-100">
                   {data.teams?.[0]} <span className="text-slate-400">vs</span> {data.teams?.[1]}
                 </p>
-                <span className={`inline-block mt-1 text-xs font-bold px-3 py-1 rounded-full ${statusColor(data.status)}`}>
-                  {data.status}
-                </span>
+                <span className={`inline-block mt-1 text-xs font-bold px-3 py-1 rounded-full ${statusColor(data.status)}`}>{data.status}</span>
                 {data.venue && <p className="text-sm text-slate-400 mt-1">📍 {data.venue}</p>}
               </div>
-
-              {/* Score summary */}
               {data.score?.length > 0 && (
                 <div className="grid grid-cols-2 gap-3 mb-4">
                   {data.score.map((s, i) => (
@@ -122,12 +114,9 @@ function MatchModal({ matchId, onClose }) {
                   ))}
                 </div>
               )}
-
-              {/* Scorecard innings */}
               {scorecard?.scorecard?.map((inn, i) => (
                 <div key={i} className="mb-5">
                   <h3 className="font-bold text-emerald-600 dark:text-emerald-400 mb-2 text-sm">{inn.inning}</h3>
-                  {/* Batting */}
                   <div className="overflow-x-auto mb-2">
                     <table className="w-full text-xs">
                       <thead>
@@ -154,7 +143,6 @@ function MatchModal({ matchId, onClose }) {
                       </tbody>
                     </table>
                   </div>
-                  {/* Bowling */}
                   <div className="overflow-x-auto">
                     <table className="w-full text-xs">
                       <thead>
@@ -225,19 +213,14 @@ function PlayerModal({ playerId, onClose }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" onClick={onClose}>
-      <div
-        className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto"
-        onClick={e => e.stopPropagation()}
-      >
+      <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between p-5 border-b border-slate-100 dark:border-slate-700">
           <h2 className="font-bold text-slate-800 dark:text-slate-100 text-lg">Player Info</h2>
           <button onClick={onClose} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-2xl leading-none">&times;</button>
         </div>
         <div className="p-5">
           {loading ? (
-            <div className="space-y-3">
-              {[1,2,3].map(i => <div key={i} className="h-4 bg-slate-200 dark:bg-slate-700 rounded animate-pulse" />)}
-            </div>
+            <div className="space-y-3">{[1,2,3].map(i => <div key={i} className="h-4 bg-slate-200 dark:bg-slate-700 rounded animate-pulse" />)}</div>
           ) : data ? (
             <>
               <div className="flex items-center gap-4 mb-5">
@@ -294,6 +277,7 @@ export default function Cricket() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [search, setSearch] = useState('');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedMatch, setSelectedMatch] = useState(null);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
 
@@ -304,7 +288,7 @@ export default function Cricket() {
       setMatches(data?.data || []);
     } catch (err) {
       setMatches([]);
-      setError(err.response?.data?.error || 'Failed to load matches');
+      setError(err.response?.data?.error || err.message || 'Failed to load matches');
     } finally {
       setLoading(false);
     }
@@ -317,7 +301,7 @@ export default function Cricket() {
       setSeries(data?.data || []);
     } catch (err) {
       setSeries([]);
-      setError(err.response?.data?.error || 'Failed to load series');
+      setError(err.response?.data?.error || err.message || 'Failed to load series');
     } finally {
       setLoading(false);
     }
@@ -331,130 +315,171 @@ export default function Cricket() {
       setPlayers(data?.data || []);
     } catch (err) {
       setPlayers([]);
-      setError(err.response?.data?.error || 'Failed to search players');
+      setError(err.response?.data?.error || err.message || 'Failed to search players');
     } finally {
       setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    if (tab === 'live' || tab === 'upcoming' || tab === 'recent') fetchMatches(tab);
+    if (['live', 'upcoming', 'recent'].includes(tab)) fetchMatches(tab);
     if (tab === 'series') fetchSeries();
     if (tab === 'players') { setPlayers([]); setError(''); }
   }, [tab, fetchMatches, fetchSeries]);
 
-  const tabLabel = (t) => ({ live: '🔴 Live', upcoming: '📅 Upcoming', recent: '✅ Recent', players: '👤 Players', series: '🏆 Series' }[t]);
+  const handleTab = (t) => { setTab(t); setSidebarOpen(false); };
+  const active = SIDEBAR_ITEMS.find(s => s.key === tab);
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-emerald-600 to-teal-700 text-white py-10 px-4">
-        <div className="container mx-auto max-w-6xl">
-          <h1 className="text-3xl font-bold mb-1">🏏 Cricket</h1>
-          <p className="text-emerald-100 text-sm">Live scores, match details, player stats & series</p>
-        </div>
-      </div>
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex">
 
-      <div className="container mx-auto max-w-6xl px-4 py-6">
-        {/* Tabs */}
-        <div className="flex gap-2 flex-wrap mb-6">
-          {TABS.map(t => (
+      {/* Mobile backdrop */}
+      {sidebarOpen && (
+        <div className="fixed inset-0 z-30 bg-black/40 backdrop-blur-sm lg:hidden" onClick={() => setSidebarOpen(false)} />
+      )}
+
+      {/* Left Sidebar */}
+      <aside className={`fixed top-0 left-0 h-full w-60 z-40 bg-gradient-to-b from-emerald-700 to-teal-800 shadow-2xl flex flex-col transition-transform duration-300
+        lg:translate-x-0 lg:static lg:flex
+        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
+      >
+        <div className="flex items-center justify-between px-5 py-5 border-b border-white/10">
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">🏏</span>
+            <span className="font-bold text-white text-lg">Cricket</span>
+          </div>
+          <button onClick={() => setSidebarOpen(false)} className="lg:hidden text-emerald-200 hover:text-white">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <nav className="flex-1 px-3 py-4 space-y-1">
+          {SIDEBAR_ITEMS.map(({ key, label, emoji }) => (
             <button
-              key={t}
-              onClick={() => setTab(t)}
-              className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-150 ${
-                tab === t
-                  ? 'bg-emerald-600 text-white shadow'
-                  : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-emerald-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
+              key={key}
+              onClick={() => handleTab(key)}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-150 ${
+                tab === key
+                  ? 'bg-white/20 text-white shadow-inner'
+                  : 'text-emerald-100 hover:bg-white/10 hover:text-white'
               }`}
             >
-              {tabLabel(t)}
+              <span className="text-base">{emoji}</span>
+              {label}
+              {tab === key && <span className="ml-auto w-2 h-2 rounded-full bg-yellow-400 animate-pulse" />}
             </button>
           ))}
+        </nav>
+
+        <div className="px-5 py-4 border-t border-white/10">
+          <p className="text-xs text-emerald-300">Powered by CricAPI</p>
+        </div>
+      </aside>
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col min-w-0">
+
+        {/* Header */}
+        <div className="bg-gradient-to-r from-emerald-600 to-teal-700 text-white py-6 px-5 flex items-center gap-4">
+          <button
+            onClick={() => setSidebarOpen(true)}
+            className="lg:hidden flex flex-col gap-1 p-2 rounded-lg hover:bg-white/10"
+          >
+            <span className="block w-5 h-0.5 bg-white rounded" />
+            <span className="block w-5 h-0.5 bg-white rounded" />
+            <span className="block w-5 h-0.5 bg-white rounded" />
+          </button>
+          <div>
+            <h1 className="text-2xl font-bold">{active?.emoji} {active?.label}</h1>
+            <p className="text-emerald-100 text-xs mt-0.5">Live scores, match details, player stats & series</p>
+          </div>
         </div>
 
-        {/* Players search bar */}
-        {tab === 'players' && (
-          <div className="flex gap-2 mb-6">
-            <input
-              type="text"
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && searchPlayers(search)}
-              placeholder="Search player name..."
-              className="flex-1 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none focus:ring-2 focus:ring-emerald-400"
-            />
-            <button
-              onClick={() => searchPlayers(search)}
-              className="px-5 py-2.5 bg-emerald-600 text-white rounded-xl text-sm font-semibold hover:bg-emerald-700 transition"
-            >
-              Search
-            </button>
-          </div>
-        )}
+        <div className="p-4 md:p-6">
 
-        {/* Error Banner */}
-        {error && (
-          <div className="mb-6 flex items-start gap-3 rounded-2xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 px-5 py-4 text-red-700 dark:text-red-400">
-            <span className="text-xl">⚠️</span>
-            <div>
-              <p className="font-semibold text-sm">API Error</p>
-              <p className="text-sm mt-0.5">{error}</p>
-              {/limit|exceeded/i.test(error) && (
-                <p className="text-xs mt-1 text-red-500">Your CricAPI free plan (100 hits/day) is exhausted. Resets at midnight UTC. <a href="https://cricapi.com" target="_blank" rel="noreferrer" className="underline font-semibold">Upgrade plan →</a></p>
-              )}
+          {/* Player search */}
+          {tab === 'players' && (
+            <div className="flex gap-2 mb-6">
+              <input
+                type="text"
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && searchPlayers(search)}
+                placeholder="Search player name..."
+                className="flex-1 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none focus:ring-2 focus:ring-emerald-400"
+              />
+              <button
+                onClick={() => searchPlayers(search)}
+                className="px-5 py-2.5 bg-emerald-600 text-white rounded-xl text-sm font-semibold hover:bg-emerald-700 transition"
+              >
+                Search
+              </button>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Content */}
-        {loading ? (
-          <Skeleton rows={6} />
-        ) : tab === 'players' ? (
-          players.length === 0 ? (
+          {/* Error banner */}
+          {error && (
+            <div className="mb-6 flex items-start gap-3 rounded-2xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 px-5 py-4 text-red-700 dark:text-red-400">
+              <span className="text-xl">⚠️</span>
+              <div>
+                <p className="font-semibold text-sm">API Error</p>
+                <p className="text-sm mt-0.5">{error}</p>
+                {/limit|exceeded/i.test(error) && (
+                  <p className="text-xs mt-1 text-red-500">
+                    CricAPI free plan (100 hits/day) exhausted. Resets at midnight UTC.{' '}
+                    <a href="https://cricapi.com" target="_blank" rel="noreferrer" className="underline font-semibold">Upgrade →</a>
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Content */}
+          {loading ? (
+            <Skeleton rows={6} />
+          ) : tab === 'players' ? (
+            players.length === 0 ? (
+              <div className="text-center py-16 text-slate-400">
+                <p className="text-4xl mb-3">👤</p>
+                <p>Search for a player above</p>
+              </div>
+            ) : (
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {players.map(p => <PlayerCard key={p.id} player={p} onClick={pl => setSelectedPlayer(pl.id)} />)}
+              </div>
+            )
+          ) : tab === 'series' ? (
+            series.length === 0 ? (
+              <div className="text-center py-16 text-slate-400">
+                <p className="text-4xl mb-3">🏆</p>
+                <p>No series found</p>
+              </div>
+            ) : (
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {series.map(s => (
+                  <div key={s.id} className="rounded-2xl bg-white dark:bg-slate-800 p-5 shadow border border-slate-100 dark:border-slate-700">
+                    <p className="font-semibold text-slate-800 dark:text-slate-100 mb-1">🏆 {s.name}</p>
+                    <p className="text-xs text-slate-400">{s.startDate} – {s.endDate}</p>
+                    <p className="text-xs text-slate-400 mt-1">{s.odi} ODIs · {s.t20} T20s · {s.test} Tests</p>
+                  </div>
+                ))}
+              </div>
+            )
+          ) : matches.length === 0 && !error ? (
             <div className="text-center py-16 text-slate-400">
-              <p className="text-4xl mb-3">👤</p>
-              <p>Search for a player above</p>
+              <p className="text-4xl mb-3">🏏</p>
+              <p>No {tab} matches found</p>
             </div>
           ) : (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {players.map(p => (
-                <PlayerCard key={p.id} player={p} onClick={pl => setSelectedPlayer(pl.id)} />
-              ))}
+              {matches.map(m => <MatchCard key={m.id} match={m} onClick={match => setSelectedMatch(match.id)} />)}
             </div>
-          )
-        ) : tab === 'series' ? (
-          series.length === 0 ? (
-            <div className="text-center py-16 text-slate-400">
-              <p className="text-4xl mb-3">🏆</p>
-              <p>No series found</p>
-            </div>
-          ) : (
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {series.map(s => (
-                <div key={s.id} className="rounded-2xl bg-white dark:bg-slate-800 p-5 shadow border border-slate-100 dark:border-slate-700">
-                  <p className="font-semibold text-slate-800 dark:text-slate-100 mb-1">🏆 {s.name}</p>
-                  <p className="text-xs text-slate-400">{s.startDate} – {s.endDate}</p>
-                  <p className="text-xs text-slate-400 mt-1">{s.odi} ODIs · {s.t20} T20s · {s.test} Tests</p>
-                </div>
-              ))}
-            </div>
-          )
-        ) : matches.length === 0 ? (
-          <div className="text-center py-16 text-slate-400">
-            <p className="text-4xl mb-3">🏏</p>
-            <p>No {tab} matches found</p>
-          </div>
-        ) : (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {matches.map(m => (
-              <MatchCard key={m.id} match={m} onClick={match => setSelectedMatch(match.id)} />
-            ))}
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
-      {/* Modals */}
       {selectedMatch && <MatchModal matchId={selectedMatch} onClose={() => setSelectedMatch(null)} />}
       {selectedPlayer && <PlayerModal playerId={selectedPlayer} onClose={() => setSelectedPlayer(null)} />}
     </div>
