@@ -19,11 +19,6 @@ const Icons = {
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
     </svg>
   ),
-  Cricket: () => (
-    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" />
-    </svg>
-  ),
   Create: () => (
     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -66,7 +61,6 @@ const navLinks = [
   { to: '/',         label: 'Home',       Icon: Icons.Home,     color: 'text-indigo-600',  bg: 'bg-indigo-50  dark:bg-indigo-900/30' },
   { to: '/trending', label: 'Trending',   Icon: Icons.Trending, color: 'text-rose-600',    bg: 'bg-rose-50    dark:bg-rose-900/30' },
   { to: '/news',     label: 'News',       Icon: Icons.News,     color: 'text-sky-600',     bg: 'bg-sky-50     dark:bg-sky-900/30' },
-  { to: '/cricket',  label: 'Cricket',    Icon: Icons.Cricket,  color: 'text-emerald-600', bg: 'bg-emerald-50 dark:bg-emerald-900/30' },
   { to: '/create',   label: 'Create',     Icon: Icons.Create,   color: 'text-violet-600',  bg: 'bg-violet-50  dark:bg-violet-900/30' },
   { to: '/messages', label: 'Messages',   Icon: Icons.Messages, color: 'text-amber-600',   bg: 'bg-amber-50   dark:bg-amber-900/30' },
 ];
