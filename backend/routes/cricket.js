@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const KEY = process.env.CRICAPI_KEY;
+const KEY = process.env.CRICAPI_KEY; // v2
 const BASE = 'https://api.cricapi.com/v1';
 
 const cricFetch = async (endpoint) => {
