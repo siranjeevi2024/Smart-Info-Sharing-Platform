@@ -1,23 +1,52 @@
 const express = require('express');
 const router = express.Router();
+const https = require('https');
 
 const GNEWS_API_KEY = process.env.GNEWS_API_KEY;
 const BASE_URL = 'https://gnews.io/api/v4';
 
-router.get('/', async (req, res) => {
-  const { category = 'general', q, lang = 'en', max = 10 } = req.query;
-  try {
-    const endpoint = q
-      ? `${BASE_URL}/search?q=${encodeURIComponent(q)}&lang=${lang}&max=${max}&apikey=${GNEWS_API_KEY}`
-      : `${BASE_URL}/top-headlines?category=${category}&lang=${lang}&max=${max}&apikey=${GNEWS_API_KEY}`;
+const fetchJSON = (url) => new Promise((resolve, reject) => {
+  https.get(url, (res) => {
+    let data = '';
+    res.on('data', chunk => data += chunk);
+    res.on('end', () => {
+      try { resolve(JSON.parse(data)); }
+      catch (e) { reject(e); }
+    });
+  }).on('error', reject);
+});
 
-    const response = await fetch(endpoint);
-    const data = await response.json();
-    console.log('GNews response articles:', data.articles?.length, 'error:', data.errors);
-    res.json(data);
-  } catch (err) {
-    console.error('News fetch error:', err.message);
-    res.status(500).json({ error: 'Failed to fetch news' });
+const categoryMap = {
+  general: 'general', sports: 'sports', technology: 'technology',
+  health: 'health', business: 'business', education: 'nation',
+  science: 'science', entertainment: 'entertainment',
+};
+
+router.get('/', async (req, res) => {
+  try {
+    const { category = 'general', q } = req.query;
+
+    let url;
+    if (q) {
+      url = `${BASE_URL}/search?q=${encodeURIComponent(q)}&lang=en&max=20&apikey=${GNEWS_API_KEY}`;
+    } else {
+      const mapped = categoryMap[category] || 'general';
+      url = `${BASE_URL}/top-headlines?category=${mapped}&lang=en&max=20&apikey=${GNEWS_API_KEY}`;
+    }
+
+    const data = await fetchJSON(url);
+    const articles = (data.articles || []).map(a => ({
+      title: a.title,
+      description: a.description,
+      url: a.url,
+      image: a.image,
+      publishedAt: a.publishedAt,
+      source: { name: a.source?.name },
+    }));
+
+    res.json({ articles });
+  } catch (error) {
+    res.status(500).json({ articles: [], error: 'Failed to fetch news' });
   }
 });
 
