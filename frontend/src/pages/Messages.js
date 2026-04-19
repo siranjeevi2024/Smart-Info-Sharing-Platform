@@ -169,9 +169,9 @@ const Messages = () => {
   );
 
   return (
-    <div className="h-screen bg-gradient-to-br from-blue-50 to-indigo-100 pt-16">
-      <div className="container mx-auto px-4 h-full">
-        <div className="bg-white rounded-2xl shadow-2xl h-[calc(100vh-120px)] flex overflow-hidden">
+    <div className="page-container !pt-0 !pb-0">
+      <div className="container mx-auto px-4 h-[calc(100vh-64px)] py-4">
+        <div className="bg-white rounded-2xl shadow-2xl h-full flex overflow-hidden dark:bg-slate-800">
           {/* Sidebar */}
           <div className="w-1/3 border-r border-gray-200 flex flex-col">
             <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-blue-600 to-indigo-600">
