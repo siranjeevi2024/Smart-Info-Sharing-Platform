@@ -55,12 +55,19 @@ const Icons = {
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
     </svg>
   ),
+  Cricket: () => (
+    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2a10 10 0 100 20A10 10 0 0012 2z" />
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12l2 2 4-4" />
+    </svg>
+  ),
 };
 
 const navLinks = [
   { to: '/',         label: 'Home',       Icon: Icons.Home,     color: 'text-indigo-600',  bg: 'bg-indigo-50  dark:bg-indigo-900/30' },
   { to: '/trending', label: 'Trending',   Icon: Icons.Trending, color: 'text-rose-600',    bg: 'bg-rose-50    dark:bg-rose-900/30' },
   { to: '/news',     label: 'News',       Icon: Icons.News,     color: 'text-sky-600',     bg: 'bg-sky-50     dark:bg-sky-900/30' },
+  { to: '/cricket',  label: 'Cricket',    Icon: Icons.Cricket,  color: 'text-emerald-600', bg: 'bg-emerald-50 dark:bg-emerald-900/30' },
   { to: '/create',   label: 'Create',     Icon: Icons.Create,   color: 'text-violet-600',  bg: 'bg-violet-50  dark:bg-violet-900/30' },
   { to: '/messages', label: 'Messages',   Icon: Icons.Messages, color: 'text-amber-600',   bg: 'bg-amber-50   dark:bg-amber-900/30' },
 ];
