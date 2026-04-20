@@ -67,7 +67,7 @@ const navLinks = [
   { to: '/',         label: 'Home',       Icon: Icons.Home,     color: 'text-indigo-600',  bg: 'bg-indigo-50  dark:bg-indigo-900/30' },
   { to: '/trending', label: 'Trending',   Icon: Icons.Trending, color: 'text-rose-600',    bg: 'bg-rose-50    dark:bg-rose-900/30' },
   { to: '/news',     label: 'News',       Icon: Icons.News,     color: 'text-sky-600',     bg: 'bg-sky-50     dark:bg-sky-900/30' },
-  { to: '/cricket',  label: 'Cricket',    Icon: Icons.Cricket,  color: 'text-emerald-600', bg: 'bg-emerald-50 dark:bg-emerald-900/30' },
+  { to: '/cricket',  label: '🏏 Cricket', Icon: Icons.Cricket,  color: 'text-emerald-600', bg: 'bg-emerald-50 dark:bg-emerald-900/30', special: true },
   { to: '/create',   label: 'Create',     Icon: Icons.Create,   color: 'text-violet-600',  bg: 'bg-violet-50  dark:bg-violet-900/30' },
   { to: '/messages', label: 'Messages',   Icon: Icons.Messages, color: 'text-amber-600',   bg: 'bg-amber-50   dark:bg-amber-900/30' },
 ];
@@ -104,10 +104,16 @@ const Navbar = () => {
     ...(user?.role === 'admin' ? [{ to: '/admin', Icon: Icons.Admin, label: 'Admin Panel', color: 'text-purple-600', bg: 'bg-purple-50 dark:bg-purple-900/30' }] : []),
   ];
 
+  const isCricket = location.pathname.startsWith('/cricket');
+
   return (
     <>
       {/* Navbar */}
-      <nav className="bg-white border-b border-slate-100 sticky top-0 z-50 shadow-sm dark:bg-slate-900 dark:border-slate-700">
+      <nav className={`sticky top-0 z-50 shadow-sm border-b transition-colors duration-300 ${
+        isCricket
+          ? 'bg-gradient-to-r from-emerald-700 to-teal-700 border-emerald-600'
+          : 'bg-white border-slate-100 dark:bg-slate-900 dark:border-slate-700'
+      }`}>
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
 
@@ -116,12 +122,16 @@ const Navbar = () => {
               {user && (
                 <button
                   onClick={() => setDrawerOpen(o => !o)}
-                  className="flex h-9 w-9 flex-col items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-slate-50 transition hover:bg-indigo-50 hover:border-indigo-200 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700"
+                  className={`flex h-9 w-9 flex-col items-center justify-center gap-1.5 rounded-xl border transition hover:scale-105 ${
+                    isCricket
+                      ? 'border-white/30 bg-white/10 hover:bg-white/20'
+                      : 'border-slate-200 bg-slate-50 hover:bg-indigo-50 hover:border-indigo-200 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700'
+                  }`}
                   aria-label="Toggle menu"
                 >
-                  <span className={`block h-0.5 w-4 rounded-full bg-slate-600 transition-all duration-300 dark:bg-slate-300 ${drawerOpen ? 'translate-y-2 rotate-45' : ''}`} />
-                  <span className={`block h-0.5 w-4 rounded-full bg-slate-600 transition-all duration-300 dark:bg-slate-300 ${drawerOpen ? 'opacity-0' : ''}`} />
-                  <span className={`block h-0.5 w-4 rounded-full bg-slate-600 transition-all duration-300 dark:bg-slate-300 ${drawerOpen ? '-translate-y-2 -rotate-45' : ''}`} />
+                  <span className={`block h-0.5 w-4 rounded-full transition-all duration-300 ${isCricket ? 'bg-white' : 'bg-slate-600 dark:bg-slate-300'} ${drawerOpen ? 'translate-y-2 rotate-45' : ''}`} />
+                  <span className={`block h-0.5 w-4 rounded-full transition-all duration-300 ${isCricket ? 'bg-white' : 'bg-slate-600 dark:bg-slate-300'} ${drawerOpen ? 'opacity-0' : ''}`} />
+                  <span className={`block h-0.5 w-4 rounded-full transition-all duration-300 ${isCricket ? 'bg-white' : 'bg-slate-600 dark:bg-slate-300'} ${drawerOpen ? '-translate-y-2 -rotate-45' : ''}`} />
                 </button>
               )}
 
@@ -132,7 +142,13 @@ const Navbar = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
                 </div>
-                <span className="font-bold text-slate-800 text-lg hidden sm:block dark:text-white">Smart <span className="text-indigo-600">Info</span></span>
+                {isCricket ? (
+                  <span className="font-bold text-white text-lg hidden sm:flex items-center gap-1.5">
+                    <span>🏏</span> <span>Cricket <span className="text-yellow-300">Live</span></span>
+                  </span>
+                ) : (
+                  <span className="font-bold text-slate-800 text-lg hidden sm:block dark:text-white">Smart <span className="text-indigo-600">Info</span></span>
+                )}
               </Link>
             </div>
 
@@ -141,7 +157,11 @@ const Navbar = () => {
               {/* Dark/Light toggle */}
               <button
                 onClick={toggle}
-                className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-slate-600 transition hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+                className={`flex h-9 w-9 items-center justify-center rounded-xl border transition ${
+                  isCricket
+                    ? 'border-white/30 bg-white/10 text-white hover:bg-white/20'
+                    : 'border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'
+                }`}
                 aria-label="Toggle theme"
               >
                 {dark ? (
@@ -159,7 +179,11 @@ const Navbar = () => {
                 <div className="relative" ref={userMenuRef}>
                   <button
                     onClick={() => setUserMenuOpen(o => !o)}
-                    className="flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-slate-50 transition-all duration-150 border border-transparent hover:border-slate-200 dark:hover:bg-slate-800 dark:hover:border-slate-700"
+                    className={`flex items-center gap-2.5 px-3 py-2 rounded-xl transition-all duration-150 border ${
+                      isCricket
+                        ? 'border-white/20 hover:bg-white/10 text-white'
+                        : 'border-transparent hover:bg-slate-50 hover:border-slate-200 dark:hover:bg-slate-800 dark:hover:border-slate-700'
+                    }`}
                   >
                     {user.avatar ? (
                       <img src={user.avatar} alt={user.username} className="w-8 h-8 rounded-full object-cover ring-2 ring-indigo-100" />
@@ -168,7 +192,7 @@ const Navbar = () => {
                         {user.username[0].toUpperCase()}
                       </div>
                     )}
-                    <span className="hidden md:block text-sm font-semibold text-slate-700 dark:text-slate-200">{user.username}</span>
+                    <span className={`hidden md:block text-sm font-semibold ${isCricket ? 'text-white' : 'text-slate-700 dark:text-slate-200'}`}>{user.username}</span>
                     <span className={`text-slate-400 transition-transform duration-200 ${userMenuOpen ? 'rotate-180' : ''}`}>
                       <Icons.ChevronDown />
                     </span>
@@ -279,7 +303,7 @@ const Navbar = () => {
         {/* Nav Links */}
         <div className="mt-4 px-3 space-y-1">
           <p className="px-3 pb-1 text-xs font-bold uppercase tracking-widest text-slate-400">Navigation</p>
-          {navLinks.map(({ to, label, Icon, color, bg }, i) => (
+          {navLinks.map(({ to, label, Icon, color, bg, special }, i) => (
             <Link
               key={to}
               to={to}
@@ -289,13 +313,22 @@ const Navbar = () => {
               } ${
                 isActive(to)
                   ? `${bg} ${color}`
+                  : special
+                  ? 'text-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:hover:bg-emerald-900/20'
                   : 'text-slate-600 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800'
               }`}
             >
-              <span className={`flex h-9 w-9 items-center justify-center rounded-xl ${isActive(to) ? bg : 'bg-slate-100 dark:bg-slate-800'} ${isActive(to) ? color : 'text-slate-500 dark:text-slate-400'}`}>
+              <span className={`flex h-9 w-9 items-center justify-center rounded-xl ${
+                isActive(to) ? bg : special ? 'bg-emerald-50 dark:bg-emerald-900/20' : 'bg-slate-100 dark:bg-slate-800'
+              } ${
+                isActive(to) ? color : special ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-500 dark:text-slate-400'
+              }`}>
                 <Icon />
               </span>
               {label}
+              {special && !isActive(to) && (
+                <span className="ml-auto text-xs bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400 px-2 py-0.5 rounded-full font-bold">LIVE</span>
+              )}
               {isActive(to) && (
                 <span className="ml-auto h-2 w-2 rounded-full bg-current" />
               )}
