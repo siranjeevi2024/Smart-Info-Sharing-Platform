@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 
-const API = process.env.REACT_APP_API_URL || 'http://localhost:5002/api';
+const BASE = process.env.REACT_APP_API_URL || 'http://localhost:5002';
+const API = `${BASE.replace(/\/+$/, '')}/api`;
 
 const SIDEBAR_ITEMS = [
   { key: 'live',     label: 'Live',     emoji: '🔴' },
