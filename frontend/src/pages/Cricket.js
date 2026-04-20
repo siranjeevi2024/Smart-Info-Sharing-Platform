@@ -281,12 +281,16 @@ function PlayerModal({ playerId, onClose }) {
                 <div className="grid grid-cols-4 gap-2">
                   {[
                     { label: 'Matches', value: getStat('batting', activeFormat, 'm') },
+                    { label: 'Innings', value: getStat('batting', activeFormat, 'inn') },
                     { label: 'Runs', value: getStat('batting', activeFormat, 'runs') },
+                    { label: 'HS', value: getStat('batting', activeFormat, 'hs') },
                     { label: 'Avg', value: getStat('batting', activeFormat, 'avg') },
                     { label: 'SR', value: getStat('batting', activeFormat, 'sr') },
-                    { label: 'HS', value: getStat('batting', activeFormat, 'hs') },
+                    { label: 'Not Out', value: getStat('batting', activeFormat, 'no') },
                     { label: '100s', value: getStat('batting', activeFormat, '100') },
                     { label: '50s', value: getStat('batting', activeFormat, '50') },
+                    { label: '200s', value: getStat('batting', activeFormat, '200') },
+                    { label: '4s', value: getStat('batting', activeFormat, '4s') },
                     { label: '6s', value: getStat('batting', activeFormat, '6s') },
                   ].map(({ label, value }) => (
                     <div key={label} className="bg-emerald-50 dark:bg-emerald-900/20 rounded-xl p-2.5 text-center">
@@ -303,13 +307,17 @@ function PlayerModal({ playerId, onClose }) {
                 <div className="grid grid-cols-4 gap-2">
                   {[
                     { label: 'Matches', value: getStat('bowling', activeFormat, 'm') },
+                    { label: 'Innings', value: getStat('bowling', activeFormat, 'inn') },
                     { label: 'Wickets', value: getStat('bowling', activeFormat, 'wkts') },
+                    { label: 'Runs', value: getStat('bowling', activeFormat, 'runs') },
                     { label: 'Avg', value: getStat('bowling', activeFormat, 'avg') },
                     { label: 'Econ', value: getStat('bowling', activeFormat, 'econ') },
-                    { label: 'Best', value: getStat('bowling', activeFormat, 'bbi') },
-                    { label: '5W', value: getStat('bowling', activeFormat, '5w') },
                     { label: 'SR', value: getStat('bowling', activeFormat, 'sr') },
+                    { label: 'Best', value: getStat('bowling', activeFormat, 'bbi') },
+                    { label: 'Balls', value: getStat('bowling', activeFormat, 'b') },
+                    { label: '5W', value: getStat('bowling', activeFormat, '5w') },
                     { label: '10W', value: getStat('bowling', activeFormat, '10w') },
+                    { label: 'BBM', value: getStat('bowling', activeFormat, 'bbm') },
                   ].map(({ label, value }) => (
                     <div key={label} className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-2.5 text-center">
                       <p className="text-lg font-bold text-blue-700 dark:text-blue-400">{value}</p>
