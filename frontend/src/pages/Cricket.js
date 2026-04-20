@@ -200,6 +200,7 @@ function PlayerCard({ player, onClick }) {
 function PlayerModal({ playerId, onClose }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [activeFormat, setActiveFormat] = useState('odi');
 
   useEffect(() => {
     if (!playerId) return;
@@ -210,56 +211,113 @@ function PlayerModal({ playerId, onClose }) {
       .finally(() => setLoading(false));
   }, [playerId]);
 
-  const stats = data?.stats || [];
+  const getStat = (fn, matchtype, stat) => {
+    const s = data?.stats?.find(s => s.fn === fn && s.matchtype === matchtype && s.stat.trim() === stat);
+    return s?.value?.toString().trim() || '-';
+  };
+
+  const formats = ['test', 'odi', 't20', 'ipl'];
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" onClick={onClose}>
-      <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+      <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between p-5 border-b border-slate-100 dark:border-slate-700">
-          <h2 className="font-bold text-slate-800 dark:text-slate-100 text-lg">Player Info</h2>
+          <h2 className="font-bold text-slate-800 dark:text-slate-100 text-lg">Player Profile</h2>
           <button onClick={onClose} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-2xl leading-none">&times;</button>
         </div>
         <div className="p-5">
           {loading ? (
-            <div className="space-y-3">{[1,2,3].map(i => <div key={i} className="h-4 bg-slate-200 dark:bg-slate-700 rounded animate-pulse" />)}</div>
+            <div className="space-y-3">{[1,2,3,4].map(i => <div key={i} className="h-4 bg-slate-200 dark:bg-slate-700 rounded animate-pulse" />)}</div>
           ) : data ? (
             <>
-              <div className="flex items-center gap-4 mb-5">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center text-white font-bold text-2xl">
+              {/* Profile Header */}
+              <div className="flex items-center gap-5 mb-5">
+                {data.playerImg ? (
+                  <img src={data.playerImg} alt={data.name}
+                    className="w-20 h-20 rounded-2xl object-cover border-2 border-emerald-200 shadow"
+                    onError={e => { e.target.style.display='none'; e.target.nextSibling.style.display='flex'; }}
+                  />
+                ) : null}
+                <div className={`w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 items-center justify-center text-white font-bold text-3xl flex-shrink-0 ${data.playerImg ? 'hidden' : 'flex'}`}>
                   {data.name?.[0]}
                 </div>
                 <div>
-                  <p className="text-xl font-bold text-slate-800 dark:text-slate-100">{data.name}</p>
-                  <p className="text-sm text-slate-400">{data.country} · {data.role}</p>
-                  {data.bat && <p className="text-xs text-slate-400">Bat: {data.bat} | Bowl: {data.bowl}</p>}
+                  <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100">{data.name}</h3>
+                  <p className="text-sm text-emerald-600 font-semibold">{data.country}</p>
+                  <p className="text-xs text-slate-400 mt-0.5">{data.role}</p>
                 </div>
               </div>
-              {stats.length > 0 && (
-                <div className="overflow-x-auto">
-                  <table className="w-full text-xs">
-                    <thead>
-                      <tr className="text-slate-400 border-b border-slate-100 dark:border-slate-700">
-                        <th className="text-left py-1 pr-2">Format</th>
-                        <th className="text-right py-1 px-1">M</th>
-                        <th className="text-right py-1 px-1">Runs</th>
-                        <th className="text-right py-1 px-1">Avg</th>
-                        <th className="text-right py-1 pl-1">Wkts</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {stats.map((s, i) => (
-                        <tr key={i} className="border-b border-slate-50 dark:border-slate-800 text-slate-700 dark:text-slate-300">
-                          <td className="py-1 pr-2 font-medium">{s.fn}</td>
-                          <td className="text-right py-1 px-1">{s.m}</td>
-                          <td className="text-right py-1 px-1">{s.r}</td>
-                          <td className="text-right py-1 px-1">{s.avg}</td>
-                          <td className="text-right py-1 pl-1">{s.wkts}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+
+              {/* Personal Info */}
+              <div className="grid grid-cols-2 gap-3 mb-5">
+                {[
+                  { label: 'Born', value: data.dateOfBirth ? new Date(data.dateOfBirth).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' }) : '-' },
+                  { label: 'Birthplace', value: data.placeOfBirth || '-' },
+                  { label: 'Batting', value: data.battingStyle || '-' },
+                  { label: 'Bowling', value: data.bowlingStyle || '-' },
+                ].map(({ label, value }) => (
+                  <div key={label} className="bg-slate-50 dark:bg-slate-800 rounded-xl px-4 py-3">
+                    <p className="text-xs text-slate-400 mb-0.5">{label}</p>
+                    <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">{value}</p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Format Tabs */}
+              <div className="flex gap-2 mb-4">
+                {formats.map(f => (
+                  <button key={f} onClick={() => setActiveFormat(f)}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase transition ${
+                      activeFormat === f ? 'bg-emerald-600 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:bg-emerald-50'
+                    }`}>
+                    {f}
+                  </button>
+                ))}
+              </div>
+
+              {/* Batting Stats */}
+              <div className="mb-4">
+                <p className="text-xs font-bold text-emerald-600 uppercase mb-2">🏏 Batting</p>
+                <div className="grid grid-cols-4 gap-2">
+                  {[
+                    { label: 'Matches', value: getStat('batting', activeFormat, 'm') },
+                    { label: 'Runs', value: getStat('batting', activeFormat, 'runs') },
+                    { label: 'Avg', value: getStat('batting', activeFormat, 'avg') },
+                    { label: 'SR', value: getStat('batting', activeFormat, 'sr') },
+                    { label: 'HS', value: getStat('batting', activeFormat, 'hs') },
+                    { label: '100s', value: getStat('batting', activeFormat, '100') },
+                    { label: '50s', value: getStat('batting', activeFormat, '50') },
+                    { label: '6s', value: getStat('batting', activeFormat, '6s') },
+                  ].map(({ label, value }) => (
+                    <div key={label} className="bg-emerald-50 dark:bg-emerald-900/20 rounded-xl p-2.5 text-center">
+                      <p className="text-lg font-bold text-emerald-700 dark:text-emerald-400">{value}</p>
+                      <p className="text-xs text-slate-400">{label}</p>
+                    </div>
+                  ))}
                 </div>
-              )}
+              </div>
+
+              {/* Bowling Stats */}
+              <div>
+                <p className="text-xs font-bold text-blue-600 uppercase mb-2">🎳 Bowling</p>
+                <div className="grid grid-cols-4 gap-2">
+                  {[
+                    { label: 'Matches', value: getStat('bowling', activeFormat, 'm') },
+                    { label: 'Wickets', value: getStat('bowling', activeFormat, 'wkts') },
+                    { label: 'Avg', value: getStat('bowling', activeFormat, 'avg') },
+                    { label: 'Econ', value: getStat('bowling', activeFormat, 'econ') },
+                    { label: 'Best', value: getStat('bowling', activeFormat, 'bbi') },
+                    { label: '5W', value: getStat('bowling', activeFormat, '5w') },
+                    { label: 'SR', value: getStat('bowling', activeFormat, 'sr') },
+                    { label: '10W', value: getStat('bowling', activeFormat, '10w') },
+                  ].map(({ label, value }) => (
+                    <div key={label} className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-2.5 text-center">
+                      <p className="text-lg font-bold text-blue-700 dark:text-blue-400">{value}</p>
+                      <p className="text-xs text-slate-400">{label}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </>
           ) : (
             <p className="text-center text-slate-400 py-8">No data available.</p>
