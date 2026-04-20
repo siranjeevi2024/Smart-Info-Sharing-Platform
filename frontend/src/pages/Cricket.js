@@ -284,8 +284,16 @@ export default function Cricket() {
   const fetchMatches = useCallback(async (status) => {
     setLoading(true); setError('');
     try {
-      const { data } = await axios.get(`${API}/cricket/matches?status=${status}`);
-      setMatches(data?.data || []);
+      const { data } = await axios.get(`${API}/cricket/matches`);
+      const all = data?.data || [];
+      const filtered = all.filter(m => {
+        const s = (m.status || '').toLowerCase();
+        if (status === 'live') return m.matchStarted && !m.matchEnded;
+        if (status === 'recent') return m.matchEnded;
+        if (status === 'upcoming') return !m.matchStarted && !m.matchEnded;
+        return true;
+      });
+      setMatches(filtered);
     } catch (err) {
       setMatches([]);
       setError(err.response?.data?.error || err.message || 'Failed to load matches');

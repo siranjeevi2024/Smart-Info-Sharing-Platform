@@ -18,8 +18,8 @@ async function cricFetch(endpoint, params = {}) {
 // GET /api/cricket/matches?status=live|upcoming|recent
 router.get('/matches', async (req, res) => {
   try {
-    const { status = 'live', offset = 0 } = req.query;
-    const data = await cricFetch('matches', { status, offset });
+    const { offset = 0 } = req.query;
+    const data = await cricFetch('matches', { offset });
     res.json(data);
   } catch (err) {
     res.status(500).json({ error: err.message });
