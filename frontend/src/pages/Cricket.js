@@ -422,7 +422,7 @@ export default function Cricket() {
 
       {/* Left Sidebar */}
       <aside className={`fixed top-0 left-0 h-full w-60 z-40 bg-gradient-to-b from-emerald-700 to-teal-800 shadow-2xl flex flex-col transition-transform duration-300
-        lg:translate-x-0 lg:static lg:flex
+        lg:sticky lg:top-16 lg:h-[calc(100vh-4rem)] lg:translate-x-0 lg:flex lg:flex-shrink-0
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
         <div className="flex items-center justify-between px-5 py-5 border-b border-white/10">
