@@ -4,6 +4,20 @@ const router = express.Router();
 const CRICAPI_KEY = process.env.CRICAPI_KEY || '';
 const BASE = 'https://api.cricapi.com/v1';
 
+// Simple in-memory cache (10 minutes)
+const cache = {};
+const CACHE_TTL = 10 * 60 * 1000;
+
+function getCache(key) {
+  const entry = cache[key];
+  if (entry && Date.now() - entry.time < CACHE_TTL) return entry.data;
+  return null;
+}
+
+function setCache(key, data) {
+  cache[key] = { data, time: Date.now() };
+}
+
 async function cricFetch(endpoint, params = {}) {
   const url = new URL(`${BASE}/${endpoint}`);
   url.searchParams.set('apikey', CRICAPI_KEY);
@@ -15,62 +29,77 @@ async function cricFetch(endpoint, params = {}) {
   return json;
 }
 
-// GET /api/cricket/matches?status=live|upcoming|recent
 router.get('/matches', async (req, res) => {
   try {
-    const { offset = 0 } = req.query;
-    const data = await cricFetch('matches', { offset });
+    const cached = getCache('matches');
+    if (cached) return res.json(cached);
+    const data = await cricFetch('matches', { offset: 0 });
+    setCache('matches', data);
     res.json(data);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// GET /api/cricket/match/:id
 router.get('/match/:id', async (req, res) => {
   try {
+    const key = `match_${req.params.id}`;
+    const cached = getCache(key);
+    if (cached) return res.json(cached);
     const data = await cricFetch('match_info', { id: req.params.id });
+    setCache(key, data);
     res.json(data);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// GET /api/cricket/scorecard/:id
 router.get('/scorecard/:id', async (req, res) => {
   try {
+    const key = `scorecard_${req.params.id}`;
+    const cached = getCache(key);
+    if (cached) return res.json(cached);
     const data = await cricFetch('match_scorecard', { id: req.params.id });
+    setCache(key, data);
     res.json(data);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// GET /api/cricket/players?search=name
 router.get('/players', async (req, res) => {
   try {
     const { search = '' } = req.query;
+    const key = `players_${search}`;
+    const cached = getCache(key);
+    if (cached) return res.json(cached);
     const data = await cricFetch('players', { search, offset: 0 });
+    setCache(key, data);
     res.json(data);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// GET /api/cricket/player/:id
 router.get('/player/:id', async (req, res) => {
   try {
+    const key = `player_${req.params.id}`;
+    const cached = getCache(key);
+    if (cached) return res.json(cached);
     const data = await cricFetch('players_info', { id: req.params.id });
+    setCache(key, data);
     res.json(data);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// GET /api/cricket/series
 router.get('/series', async (req, res) => {
   try {
+    const cached = getCache('series');
+    if (cached) return res.json(cached);
     const data = await cricFetch('series', { offset: 0 });
+    setCache('series', data);
     res.json(data);
   } catch (err) {
     res.status(500).json({ error: err.message });
