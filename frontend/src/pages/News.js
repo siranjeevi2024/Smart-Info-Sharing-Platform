@@ -87,13 +87,17 @@ const News = () => {
 
   const activeCat = categories.find(c => c.key === activeCategory);
 
-  const fetchNews = useCallback(async () => {
+  const fetchNews = useCallback(async (retries = 2) => {
     setLoading(true);
     try {
       const params = search ? { q: search } : { category: activeCategory };
-      const { data } = await API.get('/news', { params });
+      const { data } = await API.get('/news', { params, timeout: 15000 });
       setNews(data.articles || []);
-    } catch {
+    } catch (err) {
+      if (retries > 0) {
+        setTimeout(() => fetchNews(retries - 1), 3000);
+        return;
+      }
       setNews([]);
     } finally {
       setLoading(false);
