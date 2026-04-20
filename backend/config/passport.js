@@ -33,9 +33,14 @@ passport.use(
           return done(null, existingUser);
         }
 
+        const baseUsername = profile.displayName.replace(/\s+/g, '').toLowerCase();
+        let username = baseUsername;
+        const existing = await User.findOne({ username });
+        if (existing) username = baseUsername + Math.floor(Math.random() * 999);
+
         user = await User.create({
           googleId: profile.id,
-          username: profile.displayName.replace(/\s+/g, '_').toLowerCase() + '_' + Date.now(),
+          username,
           email,
           avatar: profile.photos[0]?.value
         });
