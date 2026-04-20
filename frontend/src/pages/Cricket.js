@@ -287,7 +287,6 @@ export default function Cricket() {
       const { data } = await axios.get(`${API}/cricket/matches`);
       const all = data?.data || [];
       const filtered = all.filter(m => {
-        const s = (m.status || '').toLowerCase();
         if (status === 'live') return m.matchStarted && !m.matchEnded;
         if (status === 'recent') return m.matchEnded;
         if (status === 'upcoming') return !m.matchStarted && !m.matchEnded;
