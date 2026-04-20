@@ -6,11 +6,14 @@ import PostCard from '../components/PostCard';
 import UserStats from '../components/UserStats';
 
 const Profile = () => {
-  const { user } = useAuth();
+  const { user, setUser } = useAuth();
   const [myPosts, setMyPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [activeTab, setActiveTab] = useState('posts');
+  const [editingUsername, setEditingUsername] = useState(false);
+  const [newUsername, setNewUsername] = useState('');
+  const [usernameError, setUsernameError] = useState('');
 
   useEffect(() => {
     API.get('/posts')
@@ -33,6 +36,19 @@ const Profile = () => {
       }
     };
     reader.readAsDataURL(file);
+  };
+
+  const handleUsernameUpdate = async () => {
+    if (!newUsername.trim()) return;
+    setUsernameError('');
+    try {
+      const { data } = await API.put('/users/update-profile', { username: newUsername.trim() });
+      setUser(prev => ({ ...prev, username: data.username }));
+      setEditingUsername(false);
+      window.location.reload();
+    } catch (err) {
+      setUsernameError(err.response?.data?.error || 'Failed to update username');
+    }
   };
 
   return (
@@ -64,7 +80,30 @@ const Profile = () => {
             </div>
 
             <div className="mb-4">
-              <h1 className="text-2xl font-bold text-slate-900">{user.username}</h1>
+              <div className="flex items-center gap-2">
+                {editingUsername ? (
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      value={newUsername}
+                      onChange={e => setNewUsername(e.target.value)}
+                      placeholder={user.username}
+                      className="border border-slate-300 rounded-xl px-3 py-1.5 text-sm font-bold text-slate-800 outline-none focus:ring-2 focus:ring-indigo-400"
+                      autoFocus
+                    />
+                    <button onClick={handleUsernameUpdate} className="px-3 py-1.5 bg-indigo-600 text-white text-xs font-bold rounded-xl hover:bg-indigo-700 transition">Save</button>
+                    <button onClick={() => { setEditingUsername(false); setUsernameError(''); }} className="px-3 py-1.5 bg-slate-100 text-slate-600 text-xs font-bold rounded-xl hover:bg-slate-200 transition">Cancel</button>
+                  </div>
+                ) : (
+                  <>
+                    <h1 className="text-2xl font-bold text-slate-900">{user.username}</h1>
+                    <button onClick={() => { setEditingUsername(true); setNewUsername(user.username); }} className="text-slate-400 hover:text-indigo-600 transition" title="Edit username">
+                      ✏️
+                    </button>
+                  </>
+                )}
+              </div>
+              {usernameError && <p className="text-xs text-red-500 mt-1">{usernameError}</p>}
               <p className="text-slate-500 text-sm">{user.email}</p>
               <span className="inline-flex items-center gap-1 mt-2 badge bg-indigo-100 text-indigo-700 capitalize">
                 {user.role === 'admin' ? '⚙️' : '👤'} {user.role}
