@@ -212,8 +212,16 @@ function PlayerModal({ playerId, onClose }) {
   }, [playerId]);
 
   const getStat = (fn, matchtype, stat) => {
-    const s = data?.stats?.find(s => s.fn === fn && s.matchtype === matchtype && s.stat.trim() === stat);
-    return s?.value?.toString().trim() || '-';
+    const fmt = matchtype === 't20' ? ['t20i', 't20'] : [matchtype];
+    for (const f of fmt) {
+      const s = data?.stats?.find(s =>
+        s.fn === fn &&
+        s.matchtype.trim() === f &&
+        s.stat.trim() === stat
+      );
+      if (s) return s.value?.toString().trim() || '-';
+    }
+    return '-';
   };
 
   const formats = ['test', 'odi', 't20', 'ipl'];
